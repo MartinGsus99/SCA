@@ -11,10 +11,10 @@ class SysTable extends React.Component {
                 title: 'Name',
                 dataIndex: 'name'
             },
-            {
-                title: 'Salary',
-                dataIndex: 'salary'
-            },
+            // {
+            //     title: 'Salary',
+            //     dataIndex: 'salary'
+            // },
             {
                 title: 'Address',
                 dataIndex: 'address'

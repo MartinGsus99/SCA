@@ -15,7 +15,7 @@ class NETGauge extends Component {
         const gaugeData = [
             {
                 value: 20,
-                name: 'Perfect',
+                name: '低危',
                 title: {
                     offsetCenter: ['0%', '-30%']
                 },
@@ -26,7 +26,7 @@ class NETGauge extends Component {
             },
             {
                 value: 40,
-                name: 'Good',
+                name: '重危',
                 title: {
                     offsetCenter: ['0%', '0%']
                 },
@@ -37,7 +37,7 @@ class NETGauge extends Component {
             },
             {
                 value: 60,
-                name: 'Commonly',
+                name: '中危',
                 title: {
                     offsetCenter: ['0%', '30%']
                 },

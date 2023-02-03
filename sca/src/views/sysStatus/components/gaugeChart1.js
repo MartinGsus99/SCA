@@ -21,12 +21,12 @@ class CPUGauge extends Component {
                 name: 'Pressure',
                 type: 'gauge',
                 detail: {
-                  formatter: '{value}'
+                  formatter: '{value}%'
                 },
                 data: [
                   {
                     value: 50,
-                    name: 'SCORE'
+                    name: 'CPU'
                   }
                 ]
               }

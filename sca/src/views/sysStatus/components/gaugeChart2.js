@@ -72,12 +72,13 @@ class RAMGauge extends Component {
             offsetCenter: [0, "-15%"],
             fontSize: 60,
             fontWeight: "bolder",
-            formatter: "{value} °C",
+            formatter: "{value} %",
             color: "inherit",
           },
           data: [
             {
               value: 20,
+              name: 'RAM'
             },
           ],
         },
