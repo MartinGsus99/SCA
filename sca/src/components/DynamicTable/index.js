@@ -8,8 +8,6 @@ class DynamicTable extends Component {
     state = {}
     render() {
         const { uiList, data } = this.props;
-
-
         return (
             <Table
                 columns={uiList} dataSource={data} pagination={false}></Table>
