@@ -9,20 +9,33 @@ class ContentAnalysis extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: true,
+      visible: false,
       queryKeys: [
         {
           id: 1,
-          label: '名称',
+          label: '报告名称：',
           key: 'name',
-          placeholder: '请输入名称',
+          placeholder: '报告名称',
         },
         {
           id: 2,
-          label: '时间',
+          label: '检测名称：',
           key: 'time',
-          placeholder: '请输入时间'
+          placeholder: '检测名称'
+        },
+        {
+          id: 3,
+          label: '语言类型',
+          key: 'language',
+          placeholder: '语言类型',
+        },
+        {
+          id: 4,
+          label: '时间范围',
+          key: 'time',
+          placeholder: '请选择时间范围'
         }
+
       ],
       uiList: [
         {
@@ -60,38 +73,88 @@ class ContentAnalysis extends React.Component {
         {
           key: 'taskname',
           type: 'string',
-          required: true,
-          label: '请输入任务名称:'
+          rules: [
+            {
+              required: true
+            }
+          ],
+          label: '检测名称:',
+          placeholder:'请输入检测名称'
         },
+     
         {
           key: 'language',
           type: 'select',
-          required: true,
-          label: '请选择项目语言：',
+          rules: [
+            {
+              required: true
+            }
+          ],
+          label: '项目语言:',
+          placeholder: '请选择项目语言：',
           options: [
             {
-              label: 'A',
-              value: 'a',
+              label: 'NodeJS',
+              value: 'nodejs',
+          
             }, {
-              label: 'A',
-              value: 'a',
+              label: 'Java',
+              value: 'java',
+            
             }
           ]
-        }
+        },
+        {
+          key: 'period',
+          type: 'cron',
+          rules: [
+            {
+              required: true
+            }
+          ],
+          label: '任务周期:',
+          placeholder: '请选择任务周期'
+        },
+        {
+          key: 'file',
+          type: 'upload',
+          rules: [
+            {
+              required: true
+            }
+          ],
+          label: '项目文件:',
+          placeholder: '项目文件'
+        },
+        {
+          key: 'remark',
+          type: 'string',
+          rules: [
+            {
+              required: false
+            }
+          ],
+          label: '备注:',
+          placeholder: '请输入备注'
+        },
       ],
+      taskform:{
+        taskname:'',
+        language:'',
+      }
     }
   }
 
   render() {
     var showModal = () => {
-      console.log("1")
       this.setState({
         visible: true,
       });
     };
 
     var handleOk = e => {
-      console.log(e);
+      console.log(this.state.taskform);
+
       this.setState({
         visible: false,
       });
@@ -113,7 +176,7 @@ class ContentAnalysis extends React.Component {
         <Modal title="Test Modal" visible={this.state.visible}
           onOk={handleOk
           } onCancel={handleCancel}>
-          <DynamicForm formItems={this.state.formItems}></DynamicForm>
+          <DynamicForm formItems={this.state.formItems} form={this.state.taskform}></DynamicForm>
         </Modal>
 
 
