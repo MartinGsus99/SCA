@@ -129,8 +129,6 @@ class History extends React.Component {
       data.rows = this.state.listQuery.limit;
       getTaskReportList(data).then((res) => {
         const result = res.data.data;
-        console.log('res', res.data.data);
-        console.log('state', this.state.data);
         this.setState({
           data: result,
         })

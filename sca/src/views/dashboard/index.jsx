@@ -1,49 +1,92 @@
-import React, { useState } from "react";
-import { Row, Col } from "antd";
+import React, { Component } from 'react';
+import { Row, Col, Card } from "antd";
 import "./Mycomponents/lineChart.less";
-import LineChart from "./Mycomponents/lineChart";
+import PieChart from './components/PieChart/'
 import PointChart from './Mycomponents/pointsMap';
+import { getIndexChart, getAdminIndexChart } from '../../api/chart';
 
-const lineChartDefaultData = {
-  "New Visits": {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145],
-  },
-  Messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130],
-  },
-  Purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130],
-  },
-  Shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130],
-  },
-};
 
-const Dashboard = () => {
-  const [lineChartData, setLineChartData] = useState(
-    lineChartDefaultData["New Visits"]
-  );
+class DashBoard extends Component {
+  constructor(props) {
+    super(props);
+  }
+  state = {
+    lineChartData: {},
+    pieChartData: {
+      title: {
+        text: '项目语言分布',
+        subtext: 'Language Distribution',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left'
+      },
+      series: [
+        {
+          name: 'Access From',
+          type: 'pie',
+          radius: '50%',
+          data: [],
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ],
+    },
+  }
 
-  const handleSetLineChartData = (type) => setLineChartData(lineChartDefaultData[type]);
+  getDistributionData() {
+    getIndexChart().then((res) => {
+      if (res.data.success) {
+        let distributionData = res.data.data.distribution;
+        let oriData = Object.entries(distributionData);
+        let pieData = []
+        oriData.map((item) => {
+          let temp = {}
+          temp.name = item[0];
+          temp.value = item[1].number;
+          pieData.push(temp);
+        })
+        this.state.pieChartData.series[0].data=pieData;
+        console.log(this.state.pieChartData);
+      }
+    })
+  }
 
-  return (
-    <div className="app-container">
-      <Row>
-        <Col className="col" span={8}>
-          <LineChart></LineChart>
-        </Col>
-        <Col className="col" span={15}>
-          <PointChart></PointChart>
-        </Col>
-    
-      </Row>
+  componentWillMount() {
+   
+  }
 
-    </div>
-  );
-};
+  componentDidMount(){
+    this.getDistributionData();
+  }
 
-export default Dashboard;
+  render() {
+    return (
+      <div className="app-container">
+        <Row>
+          <Col className="col" span={8}>
+            <Card>
+              <PieChart pieChartData={this.state.pieChartData}></PieChart>
+            </Card>
+          </Col>
+          <Col className="col" span={15}>
+
+          </Col>
+
+        </Row>
+
+      </div>
+    );
+  }
+}
+
+export default DashBoard;
