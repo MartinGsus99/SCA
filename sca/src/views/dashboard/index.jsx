@@ -12,35 +12,7 @@ class DashBoard extends Component {
   }
   state = {
     lineChartData: {},
-    pieChartData: {
-      title: {
-        text: '项目语言分布',
-        subtext: 'Language Distribution',
-        left: 'center'
-      },
-      tooltip: {
-        trigger: 'item'
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'left'
-      },
-      series: [
-        {
-          name: 'Access From',
-          type: 'pie',
-          radius: '50%',
-          data: [],
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-          }
-        }
-      ],
-    },
+    pieDatas:[],
   }
 
   getDistributionData() {
@@ -55,27 +27,29 @@ class DashBoard extends Component {
           temp.value = item[1].number;
           pieData.push(temp);
         })
-        this.state.pieChartData.series[0].data=pieData;
-        console.log(this.state.pieChartData);
+        this.setState({
+          pieDatas:pieData
+        })
       }
     })
   }
 
   componentWillMount() {
-   
-  }
-
-  componentDidMount(){
     this.getDistributionData();
   }
 
+  componentDidMount(){
+    
+  }
+
   render() {
+
     return (
       <div className="app-container">
         <Row>
           <Col className="col" span={8}>
             <Card>
-              <PieChart pieChartData={this.state.pieChartData}></PieChart>
+              <PieChart pieChartData={this.state.pieDatas} chartTitle={'项目语言分布'}></PieChart>
             </Card>
           </Col>
           <Col className="col" span={15}>

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Card, Row, Form, Button, Input, DatePicker, Select } from 'antd';
-import { func } from 'prop-types';
-
 
 class Filter extends Component {
     constructor(props) {

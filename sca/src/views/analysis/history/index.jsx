@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Filter from '@/components/Filter';
-import { Card, Button } from 'antd';
+import { Card } from 'antd';
 import DynamicTable from '@/components/DynamicTable';
 import { getTaskReportList } from "../../../api/report";
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Pagination } from 'antd';
+import { Table } from 'antd';
 
 class DynamicTable extends Component {
     constructor(props) {
@@ -14,19 +14,7 @@ class DynamicTable extends Component {
         },
     }
     render() {
-        const onChange = () => {
-
-        };
         const { uiList, data, listQuery } = this.props;
-
-        // changePage = () => {
-        //     this.setState({
-        //         pagination: {
-        //             pageSize: listQuery.limit,
-        //         }
-        //     })
-        // }
-
         return (
             <div>
                 <Table rowKey='id'
