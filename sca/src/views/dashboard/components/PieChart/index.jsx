@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
 import * as echarts from 'echarts';
-import './index.less';
-
 class PieChart extends Component {
   constructor(props) {
     super(props);
-    this.myRef = React.createRef();
   }
   state = {
-    pieTitle: '',
-    pieData: [],
-    pieChartOption : {
+    chart: null,
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.chartData !== this.props.pieChartData) {
+      this.initChart();
+    }
+  }
+
+  setOptions(actualData) {
+    this.state.chart.setOption({
       title: {
-        text: '',
-        subtext: 'Language Distribution',
+        text: this.props.chartTitle,
+        subtext: this.props.subTitle,
         left: 'center'
       },
       tooltip: {
@@ -28,7 +33,7 @@ class PieChart extends Component {
           name: 'Access From',
           type: 'pie',
           radius: '50%',
-          data: [],
+          data: actualData,
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
@@ -37,41 +42,20 @@ class PieChart extends Component {
             }
           }
         }
-      ],
-    }
+      ]
+    })
   }
 
-  initChart(){
-    var chartDom = document.getElementById('pieChart');
-    var myChart = echarts.init(chartDom);
-    myChart.setOption(this.state.pieChartOption);
-  }
-
-  refreshChart(){
-    let chartDom=this.myRef.current;
-    const pieChartData = this.props.pieChartData;
-    const title=this.props.chartTitle;
-    this.setState({
-      pieTitle:title,
-      pieData:pieChartData,
+  initChart() {
+    if (!this.el) return;
+    this.setState({ chart: echarts.init(this.el, "macarons") }, () => {
+      this.setOptions(this.props.pieChartData);
     });
-    var myChart = echarts.init(chartDom);
-    myChart.setOption(this.state.pieChartOption);
-  };
-
-  componentDidMount() {
-    this.initChart();
-  }
-
-  componentDidUpdate(){
-    this.refreshChart();
   }
 
   render() {
     return (
-      <div ref={this.myRef} id="pieChart" className={'pieChart'}>
-
-      </div>
+      <div ref={(el) => (this.el = el)} style={this.props.styles }></div>
     );
   }
 }
