@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { Row, Col, Card,Button } from "antd";
+import { Row, Col, Card } from "antd";
 import "./Mycomponents/lineChart.less";
 import PieChart from './components/PieChart/'
-import PointChart from './Mycomponents/pointsMap';
-import { getIndexChart, getAdminIndexChart } from '../../api/chart';
+import LineChart from './components/LineChart'
+import { getIndexChart } from '../../api/chart';
 
 
 class DashBoard extends Component {
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
   state = {
-    lineChartData: {},
+    lineChartDatas: {},
     pieDatas: [],
     age:0,
   }
@@ -25,15 +25,12 @@ class DashBoard extends Component {
         oriData.map((item) => {
           let temp = {}
           temp.name = item[0].toUpperCase();
-          temp.value = item[1].number + 1;
+          temp.value = item[1].number;
           pieData.push(temp);
-        })
-
+        });
         this.setState({
           pieDatas: pieData
         });
-        console.log("获取到远程数据：", this.state.pieDatas);
-
       }
     })
   }
@@ -54,9 +51,12 @@ class DashBoard extends Component {
             <Card>
               <PieChart pieChartData={this.state.pieDatas} chartTitle={'项目语言分布'} subTitle={'Distribution of Language'} styles={{width:500,height:400}}></PieChart>
             </Card>
+
           </Col>
           <Col className="col" span={15}>
-            
+          <Card>
+              <LineChart pieChartData={this.state.pieDatas} chartTitle={'2023年检测分布'} subTitle={'Distribution of Language'} styles={{width:1100,height:400}}></LineChart>
+            </Card>
           </Col>
 
         </Row>
