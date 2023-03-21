@@ -7,9 +7,9 @@ import { getIndexChart } from '../../api/chart';
 
 
 class DashBoard extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+  constructor(props) {
+    super(props);
+  }
   state = {
     lineChartDatas: {},
     pieDatas: [],
@@ -32,15 +32,13 @@ class DashBoard extends Component {
           pieDatas: pieData
         });
       }
+    }).catch((err)=>{
+      console.log(err);
     })
   }
 
   componentWillMount() {
     this.getDistributionData();
-  }
-
-  componentDidMount() {
-
   }
 
   render() {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Menu, Icon } from "antd";
+import { Menu } from "antd";
 import { Link, withRouter } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";

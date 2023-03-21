@@ -23,8 +23,8 @@ class NETGauge extends Component {
         this.state.chart.setOption({
             series: [{
                 min: 0,
-                max: 30,
-                interval: 500,
+                max: 10,
+                interval: 1,
                 type: 'gauge',
                 progress: {
                     show: true,
@@ -67,7 +67,7 @@ class NETGauge extends Component {
                     formatter: '{value} Mb/s',
                 },
                 data: [{
-                    value: actualData,
+                    value: (actualData/1024).toFixed(2),
                     name: "传输速率"
                 },
                 ]

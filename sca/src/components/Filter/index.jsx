@@ -17,22 +17,22 @@ class Filter extends Component {
         const onChange = function () {
 
         };
-        const { queryKeys,searchInfor } = this.props;
+        const { queryRules,queryKeys ,searchInfor } = this.props;
         return (
             <Row>
                 <Card>
                     <Form layout={'inline'}>
                         {
-                            queryKeys.map((item) => {
+                            queryRules.map((item) => {
                                 if (item.type == 'string') {
-                                    return <Form.Item label={item.label} field={item.key} key={item.key}>
+                                    return <Form.Item label={item.label} field={queryKeys[item.key]} key={item.key}>
                                         <Input placeholder={item.placeholder}></Input>
                                     </Form.Item>
                                 }
                                 if (item.type == 'select') {
-                                    return <Form.Item label={item.label} field={item.key} key={item.key} >
+                                    return <Form.Item label={item.label} field={queryKeys[item.key]} key={item.key} >
                                         <Select
-                                        style={{width:180}}
+                                            style={{ width: 180 }}
                                             defaultValue={item.options[0].value}
                                             onChange={onchange}
                                         >
@@ -46,7 +46,7 @@ class Filter extends Component {
                                     </Form.Item>
                                 }
                                 if (item.type == 'daterange') {
-                                    return <Form.Item label={item.label} field={item.key} key={item.key}>
+                                    return <Form.Item label={item.label} field={queryKeys[item.key]} key={item.key}>
                                         <RangePicker onChange={onChange} />
                                     </Form.Item>
                                 }

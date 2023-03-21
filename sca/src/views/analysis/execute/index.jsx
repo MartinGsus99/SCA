@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import Filter from '@/components/Filter';
 import DynamicTable from '@/components/DynamicTable';
 import DynamicForm from "@/components/DynamicForm";
 import { Card, Button, Modal } from 'antd';
-import { func } from "prop-types";
+
 
 class ContentAnalysis extends React.Component {
   constructor(props) {

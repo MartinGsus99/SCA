@@ -19,7 +19,6 @@ class RAMGauge extends Component {
     });
   }
 
-
   setOptions(actualData) {
     this.state.chart.setOption({
         series: [

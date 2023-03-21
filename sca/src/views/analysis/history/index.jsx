@@ -8,7 +8,7 @@ class History extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      queryKeys: [
+      queryRules: [
         {
           id: 1,
           label: '报告名称：',
@@ -78,16 +78,7 @@ class History extends React.Component {
           dataIndex: 'cost',
         },
       ],
-      data: [
-        // {
-        //   key: '1',
-        //   name: 'Python检测',
-        //   time: '2022-12-03',
-        //   filename: 'Python.zip',
-        //   status: '检测完成',
-        //   period: '每月一次'
-        // }
-      ],
+     
       queryReportKeys: {
         reportName: "",
         taskName: "",
@@ -99,44 +90,37 @@ class History extends React.Component {
         page: 1,
         limit: 10,
       },
+      data: [],
 
     };
 
   }
 
   componentWillMount() {
-    let data = this.state.queryReportKeys;
-    data.page = this.state.listQuery.page;
-    data.rows = this.state.listQuery.limit;
-    getTaskReportList(data).then((res) => {
-      if (res) {
-        const result = res.data.data;
-        this.setState({
-          data: result,
-        })
-      }
-    })
+    this.fetchData();
   }
 
   componentDidMount() {
 
   }
 
-  render() {
-    const getInfor = () => {
-      let data = this.state.queryReportKeys;
-      data.page = this.state.listQuery.page;
-      data.rows = this.state.listQuery.limit;
-      getTaskReportList(data).then((res) => {
-        const result = res.data.data;
-        this.setState({
-          data: result,
-        })
+  fetchData() {
+    let data = this.state.queryReportKeys;
+    data.page = this.state.listQuery.page;
+    data.rows = this.state.listQuery.limit;
+
+    getTaskReportList(data).then((res) => {
+      const result = res.data.data;
+      this.setState({
+        data: result,
       })
-    };
+    })
+  }
+
+  render() {
     return (
       <div>
-        <Card> <Filter queryKeys={this.state.queryKeys} searchInfor={getInfor}></Filter></Card>
+        <Card> <Filter queryRules={this.state.queryRules}  queryKeys={this.state.queryReportKeys} searchInfor={this.fetchData}></Filter></Card>
         <Card>
           <DynamicTable uiList={this.state.uiList} data={this.state.data} listQuery={this.state.listQuery}></DynamicTable>
         </Card>
