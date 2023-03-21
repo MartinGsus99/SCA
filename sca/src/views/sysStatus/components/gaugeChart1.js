@@ -4,45 +4,58 @@ import { Card, } from 'antd';
 import './gauge.less';
 
 class CPUGauge extends Component {
-    constructor(props) {
-        super(props);
-    }
-    state = {}
+  constructor(props) {
+    super(props);
+  }
+  state = {}
 
-    componentDidMount() {
-        var mychart = echarts.init(document.getElementById('cpu'));
+  initChart() {
+    if (!this.el) return;
+    this.setState({ chart: echarts.init(this.el, "macarons") }, () => {
+      this.setOptions(this.props.CPUGauge);
+    });
+  }
 
-        let option = {
-            tooltip: {
-              formatter: '{a} <br/>{b} : {c}%'
-            },
-            series: [
-              {
-                name: 'Pressure',
-                type: 'gauge',
-                detail: {
-                  formatter: '{value}%'
-                },
-                data: [
-                  {
-                    value: 50,
-                    name: 'CPU'
-                  }
-                ]
-              }
-            ]
-          };
-    
-        mychart.setOption(option);
-    }
 
-    render() {
-        return (
-            <Card className='card'>
-                <div id='cpu' className='gauge' ></div>
-            </Card>
-        );
+  setOptions(actualData) {
+    this.state.chart.setOption({
+      tooltip: {
+        formatter: '{a} <br/>{b} : {c}%'
+      },
+      series: [
+        {
+          name: 'Pressure',
+          type: 'gauge',
+          detail: {
+            formatter: '{value}%'
+          },
+          data: [
+            {
+              value: actualData,
+              name: 'CPU'
+            }
+          ]
+        }
+      ]
+    })
+  }
+
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.CPUGauge !== this.props.CPUGauge) {
+      this.initChart();
     }
+  }
+
+  render() {
+    return (
+      <Card className='card'>
+        <div ref={(el) => (this.el = el)} style={this.props.styles }></div>
+      </Card>
+    );
+  }
 }
 
 export default CPUGauge;
+
+

@@ -7,123 +7,88 @@ class NETGauge extends Component {
     constructor(props) {
         super(props);
     }
-    state = {}
-
-    componentDidMount() {
-        var mychart = echarts.init(document.getElementById('net'));
-
-        const gaugeData = [
-            {
-                value: 20,
-                name: '低危',
-                title: {
-                    offsetCenter: ['0%', '-30%']
-                },
-                detail: {
-                    valueAnimation: true,
-                    offsetCenter: ['0%', '-20%']
-                }
-            },
-            {
-                value: 40,
-                name: '重危',
-                title: {
-                    offsetCenter: ['0%', '0%']
-                },
-                detail: {
-                    valueAnimation: true,
-                    offsetCenter: ['0%', '10%']
-                }
-            },
-            {
-                value: 60,
-                name: '中危',
-                title: {
-                    offsetCenter: ['0%', '30%']
-                },
-                detail: {
-                    valueAnimation: true,
-                    offsetCenter: ['0%', '40%']
-                }
-            }
-        ];
-
-        let option = {
-            series: [
-                {
-                    type: 'gauge',
-                    startAngle: 90,
-                    endAngle: -270,
-                    pointer: {
-                        show: false
-                    },
-                    progress: {
-                        show: true,
-                        overlap: false,
-                        roundCap: true,
-                        clip: false,
-                        itemStyle: {
-                            borderWidth: 1,
-                            borderColor: '#464646'
-                        }
-                    },
-                    axisLine: {
-                        lineStyle: {
-                            width: 40
-                        }
-                    },
-                    splitLine: {
-                        show: false,
-                        distance: 0,
-                        length: 10
-                    },
-                    axisTick: {
-                        show: false
-                    },
-                    axisLabel: {
-                        show: false,
-                        distance: 50
-                    },
-                    data: gaugeData,
-                    title: {
-                        fontSize: 14
-                    },
-                    detail: {
-                        width: 50,
-                        height: 14,
-                        fontSize: 14,
-                        color: 'inherit',
-                        borderColor: 'inherit',
-                        borderRadius: 20,
-                        borderWidth: 1,
-                        formatter: '{value}%'
-                    }
-                }
-            ]
-        };
-        // setInterval(function () {
-        //     gaugeData[0].value = +(Math.random() * 100).toFixed(2);
-        //     gaugeData[1].value = +(Math.random() * 100).toFixed(2);
-        //     gaugeData[2].value = +(Math.random() * 100).toFixed(2);
-        //     myChart.setOption({
-        //         series: [
-        //             {
-        //                 data: gaugeData,
-        //                 pointer: {
-        //                     show: false
-        //                 }
-        //             }
-        //         ]
-        //     });
-        // }, 2000);
-
-        mychart.setOption(option);
+    state = {
+        networkFlow:0,
     }
+
+    initChart() {
+        if (!this.el) return;
+        this.setState({ chart: echarts.init(this.el, "macarons") }, () => {
+            this.setOptions(this.props.networkFlow);
+        });
+    }
+
+
+    setOptions(actualData) {
+        this.state.chart.setOption({
+            series: [{
+                min: 0,
+                max: 30,
+                interval: 500,
+                type: 'gauge',
+                progress: {
+                    show: true,
+                    width: 18
+                },
+                axisLine: {
+                    lineStyle: {
+                        width: 18
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                splitLine: {
+                    length: 15,
+                    lineStyle: {
+                        width: 2,
+                        color: '#999'
+                    }
+                },
+                axisLabel: {
+                    distance: 25,
+                    color: '#999',
+                    fontSize: 15
+                },
+                anchor: {
+                    show: true,
+                    showAbove: true,
+                    size: 25,
+                    itemStyle: {
+                        borderWidth: 10
+                    }
+                },
+                title: {
+                    show: true
+                },
+                detail: {
+                    valueAnimation: true,
+                    fontSize: 20,
+                    formatter: '{value} Mb/s',
+                },
+                data: [{
+                    value: actualData,
+                    name: "传输速率"
+                },
+                ]
+            }]
+        })
+    }
+
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.networkFlow !== this.props.networkFlow) {
+            this.initChart();
+        }
+    }
+
+
+
 
     render() {
         return (
             <Card className='card'>
-                <div id='net' className='gauge' ></div>
+                <div ref={(el) => (this.el = el)} style={this.props.styles}></div>
             </Card>
         );
     }

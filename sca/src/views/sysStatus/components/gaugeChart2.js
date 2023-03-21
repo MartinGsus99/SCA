@@ -7,21 +7,30 @@ class RAMGauge extends Component {
   constructor(props) {
     super(props);
   }
-  state = {};
+  state = {
+    ramUsage:0,
+  };
 
-  componentDidMount() {
-    var mychart = echarts.init(document.getElementById("ram"));
+  
+  initChart() {
+    if (!this.el) return;
+    this.setState({ chart: echarts.init(this.el, "macarons") }, () => {
+      this.setOptions(this.props.ramUsage);
+    });
+  }
 
-    var option = {
-      series: [
+
+  setOptions(actualData) {
+    this.state.chart.setOption({
+        series: [
         {
           type: "gauge",
           center: ["50%", "60%"],
           startAngle: 200,
           endAngle: -20,
           min: 0,
-          max: 60,
-          splitNumber: 12,
+          max: 100,
+          splitNumber: 10,
           itemStyle: {
             color: "#FFAB91",
           },
@@ -77,7 +86,7 @@ class RAMGauge extends Component {
           },
           data: [
             {
-              value: 20,
+              value: actualData,
               name: 'RAM'
             },
           ],
@@ -88,7 +97,7 @@ class RAMGauge extends Component {
           startAngle: 200,
           endAngle: -20,
           min: 0,
-          max: 60,
+          max: 100,
           itemStyle: {
             color: "#FD7347",
           },
@@ -116,42 +125,26 @@ class RAMGauge extends Component {
           },
           data: [
             {
-              value: 20,
+              value: actualData,
             },
           ],
         },
-      ],
-    };
-
-    // setInterval(function () {
-    //   const random = +(Math.random() * 60).toFixed(2);
-    //   myChart.setOption({
-    //     series: [
-    //       {
-    //         data: [
-    //           {
-    //             value: random,
-    //           },
-    //         ],
-    //       },
-    //       {
-    //         data: [
-    //           {
-    //             value: random,
-    //           },
-    //         ],
-    //       },
-    //     ],
-    //   });
-    // }, 2000);
-
-    mychart.setOption(option);
+      ]
+    })
   }
+
+  
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.ramUsage !== this.props.ramUsage) {
+      this.initChart();
+    }
+  }
+
 
   render() {
     return (
-      <Card className="card">
-        <div id="ram" className="gauge"></div>
+    <Card className='card'>
+        <div ref={(el) => (this.el = el)} style={this.props.styles }></div>
       </Card>
     );
   }

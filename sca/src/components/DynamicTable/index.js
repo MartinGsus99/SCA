@@ -10,7 +10,7 @@ class DynamicTable extends Component {
             defaultCurrent: 1,
             defaultPageSize: 10,
             showSizeChanger: true,
-             showQuickJumper: true,
+            showQuickJumper: true,
         },
     }
     render() {
