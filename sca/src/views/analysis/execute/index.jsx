@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import DynamicTable from '@/components/DynamicTable';
 import DynamicForm from "@/components/DynamicForm";
 import { Card, Button, Modal } from 'antd';
+import { getTask } from "../../../api/task";
 
 
 class ContentAnalysis extends React.Component {
@@ -39,15 +40,15 @@ class ContentAnalysis extends React.Component {
       uiList: [
         {
           title: '检测名称',
-          dataIndex: 'name',
+          dataIndex: 'taskName',
         },
         {
           title: '文件名称',
-          dataIndex: 'filename',
+          dataIndex: 'fileName',
         },
         {
           title: '创建时间',
-          dataIndex: 'time',
+          dataIndex: 'gmtCreate',
         },
         {
           title: '执行状态',
@@ -55,19 +56,22 @@ class ContentAnalysis extends React.Component {
         },
         {
           title: '周期检测',
-          dataIndex: 'period',
+          dataIndex: 'cronTab',
         },
       ],
-      data: [
-        {
-          key: '1',
-          name: 'Python检测',
-          time: '2022-12-03',
-          filename: 'Python.zip',
-          status: '检测完成',
-          period: '每月一次'
-        }
-      ],
+
+      queryReportKeys: {
+        reportName: "",
+        taskName: "",
+        language: "",
+        dateScope: "",
+      },
+      listQuery: {
+        total: 0,
+        page: 1,
+        limit: 10,
+      },
+      data: [],
       formItems: [
         {
           key: 'taskname',
@@ -78,9 +82,9 @@ class ContentAnalysis extends React.Component {
             }
           ],
           label: '检测名称:',
-          placeholder:'请输入检测名称'
+          placeholder: '请输入检测名称'
         },
-     
+
         {
           key: 'language',
           type: 'select',
@@ -95,11 +99,11 @@ class ContentAnalysis extends React.Component {
             {
               label: 'NodeJS',
               value: 'nodejs',
-          
+
             }, {
               label: 'Java',
               value: 'java',
-            
+
             }
           ]
         },
@@ -137,12 +141,29 @@ class ContentAnalysis extends React.Component {
           placeholder: '请输入备注'
         },
       ],
-      taskform:{
-        taskname:'',
-        language:'',
+      taskform: {
+        taskname: '',
+        language: '',
       }
     }
   }
+
+  fetchData() {
+    let data = this.state.queryReportKeys;
+    data.page = this.state.listQuery.page;
+    data.rows = this.state.listQuery.limit;
+    getTask(data).then((res) => {
+      const result = res.data.data;
+      this.setState({
+        data: result,
+      })
+    })
+  }
+
+  componentWillMount() {
+    this.fetchData();
+  }
+
 
   render() {
     var showModal = () => {

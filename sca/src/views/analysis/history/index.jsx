@@ -1,5 +1,5 @@
 import React from "react";
-import Filter from '@/components/Filter';
+import DynamicFilter from '@/components/Filter';
 import { Card } from 'antd';
 import DynamicTable from '@/components/DynamicTable';
 import { getTaskReportList } from "../../../api/report";
@@ -8,20 +8,20 @@ class History extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      queryRules: [
+      formList: [
         {
           id: 1,
           label: '报告名称：',
           key: 'reportName',
           placeholder: '报告名称',
-          type: 'string',
+          type: 'input',
         },
         {
           id: 2,
           label: '检测名称：',
           key: 'name',
           placeholder: '检测名称',
-          type: 'string',
+          type: 'input',
         },
         {
           id: 3,
@@ -69,8 +69,12 @@ class History extends React.Component {
         {
           title: '执行状态',
           dataIndex: 'status',
-          render: () => {
-            console.log();
+          render: (row) => {
+            if (row == 1) {
+              return "检测完成";
+            } else {
+              return "检查中";
+            }
           },
         },
         {
@@ -78,7 +82,7 @@ class History extends React.Component {
           dataIndex: 'cost',
         },
       ],
-     
+
       queryReportKeys: {
         reportName: "",
         taskName: "",
@@ -92,8 +96,23 @@ class History extends React.Component {
       },
       data: [],
 
-    };
+    }
+  }
 
+  fetchData() {
+    let data = this.state.queryReportKeys;
+    data.page = this.state.listQuery.page;
+    data.rows = this.state.listQuery.limit;
+    getTaskReportList(data).then((res) => {
+      const result = res.data.data;
+      this.setState({
+        data: result,
+      })
+    })
+  }
+
+  printData() {
+    console.log("输出", this.state.data)
   }
 
   componentWillMount() {
@@ -104,23 +123,11 @@ class History extends React.Component {
 
   }
 
-  fetchData() {
-    let data = this.state.queryReportKeys;
-    data.page = this.state.listQuery.page;
-    data.rows = this.state.listQuery.limit;
-
-    getTaskReportList(data).then((res) => {
-      const result = res.data.data;
-      this.setState({
-        data: result,
-      })
-    })
-  }
 
   render() {
     return (
       <div>
-        <Card> <Filter queryRules={this.state.queryRules}  queryKeys={this.state.queryReportKeys} searchInfor={this.fetchData}></Filter></Card>
+        <Card> <DynamicFilter formList ={this.state.formList} queryKeys={this.state.queryReportKeys} searchInfor={this.printData(this)}></DynamicFilter></Card>
         <Card>
           <DynamicTable uiList={this.state.uiList} data={this.state.data} listQuery={this.state.listQuery}></DynamicTable>
         </Card>
