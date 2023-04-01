@@ -65,7 +65,10 @@ service.interceptors.response.use(
   // },
   (error) => {
     console.log("err" + error); // for debug
-    const { status } = error.response;
+    if (error.response) {
+      var { status } = error.response;
+    }
+
     if (status === 403) {
       Modal.confirm({
         title: "确定登出?",

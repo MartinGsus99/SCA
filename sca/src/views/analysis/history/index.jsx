@@ -127,7 +127,7 @@ class History extends React.Component {
   render() {
     return (
       <div>
-        <Card> <DynamicFilter formList ={this.state.formList} queryKeys={this.state.queryReportKeys} searchInfor={this.printData(this)}></DynamicFilter></Card>
+        <Card> <DynamicFilter formList={this.state.formList} queryKeys={this.state.queryReportKeys} searchInfor={this.printData(this)}></DynamicFilter></Card>
         <Card>
           <DynamicTable uiList={this.state.uiList} data={this.state.data} listQuery={this.state.listQuery}></DynamicTable>
         </Card>

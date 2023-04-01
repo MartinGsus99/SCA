@@ -20,81 +20,6 @@ const History = Loadable({
   loading: Loading,
 });
 
-
-
-const Guide = Loadable({
-  loader: () => import(/*webpackChunkName:'Guide'*/ "@/views/guide"),
-  loading: Loading,
-});
-const Explanation = Loadable({
-  loader: () => import(/*webpackChunkName:'Explanation'*/ "@/views/permission"),
-  loading: Loading,
-});
-const AdminPage = Loadable({
-  loader: () =>
-    import(/*webpackChunkName:'AdminPage'*/ "@/views/permission/adminPage"),
-  loading: Loading,
-});
-const GuestPage = Loadable({
-  loader: () =>
-    import(/*webpackChunkName:'GuestPage'*/ "@/views/permission/guestPage"),
-  loading: Loading,
-});
-const EditorPage = Loadable({
-  loader: () =>
-    import(/*webpackChunkName:'EditorPage'*/ "@/views/permission/editorPage"),
-  loading: Loading,
-});
-const RichTextEditor = Loadable({
-  loader: () =>
-    import(
-      /*webpackChunkName:'RichTextEditor'*/ "@/views/components-demo/richTextEditor"
-    ),
-  loading: Loading,
-});
-const Markdown = Loadable({
-  loader: () =>
-    import(/*webpackChunkName:'Markdown'*/ "@/views/components-demo/Markdown"),
-  loading: Loading,
-});
-const Draggable = Loadable({
-  loader: () =>
-    import(
-      /*webpackChunkName:'Draggable'*/ "@/views/components-demo/draggable"
-    ),
-  loading: Loading,
-});
-const KeyboardChart = Loadable({
-  loader: () =>
-    import(/*webpackChunkName:'KeyboardChart'*/ "@/views/charts/keyboard"),
-  loading: Loading,
-});
-const LineChart = Loadable({
-  loader: () => import(/*webpackChunkName:'LineChart'*/ "@/views/charts/line"),
-  loading: Loading,
-});
-const MixChart = Loadable({
-  loader: () =>
-    import(/*webpackChunkName:'MixChart'*/ "@/views/charts/mixChart"),
-  loading: Loading,
-});
-const Menu1_1 = Loadable({
-  loader: () =>
-    import(/*webpackChunkName:'Menu1_1'*/ "@/views/nested/menu1/menu1-1"),
-  loading: Loading,
-});
-const Menu1_2_1 = Loadable({
-  loader: () =>
-    import(
-      /*webpackChunkName:'Menu1_2_1'*/ "@/views/nested/menu1/menu1-2/menu1-2-1"
-    ),
-  loading: Loading,
-});
-const Table = Loadable({
-  loader: () => import(/*webpackChunkName:'Table'*/ "@/views/table"),
-  loading: Loading,
-});
-
 const Error404 = Loadable({
   loader: () => import(/*webpackChunkName:'Error404'*/ "@/views/error/404"),
   loading: Loading,
@@ -103,6 +28,11 @@ const User = Loadable({
   loader: () => import(/*webpackChunkName:'User'*/ "@/views/user"),
   loading: Loading,
 });
+
+const LooholeDataBase=Loadable({
+  loader: () => import(/*webpackChunkName:'User'*/ "@/views/loophole"),
+  loading: Loading,
+})
 
 
 
@@ -115,48 +45,8 @@ export default [
   { path: "/sysStatus", component: SysBoard, roles: ["admin", "editor"] },
   { path: "/analysis/execute", component: ContentAnalysis, roles: ["admin", "editor"]},
   { path: "/analysis/history", component: History, roles: ["admin", "editor"]},
-  { path: "/guide", component: Guide, roles: ["admin", "editor"] },
-  { path: "/permission/explanation", component: Explanation, roles: ["admin"] },
-  { path: "/permission/adminPage", component: AdminPage, roles: ["admin"] },
-  { path: "/permission/guestPage", component: GuestPage, roles: ["guest"] },
-  { path: "/permission/editorPage", component: EditorPage, roles: ["editor"] },
-  {
-    path: "/components/richTextEditor",
-    component: RichTextEditor,
-    roles: ["admin", "editor"],
-  },
-  {
-    path: "/components/Markdown",
-    component: Markdown,
-    roles: ["admin", "editor"],
-  },
-  {
-    path: "/components/draggable",
-    component: Draggable,
-    roles: ["admin", "editor"],
-  },
-  {
-    path: "/charts/keyboard",
-    component: KeyboardChart,
-    roles: ["admin", "editor"],
-  },
-  { path: "/charts/line", component: LineChart, roles: ["admin", "editor"] },
-  {
-    path: "/charts/mix-chart",
-    component: MixChart,
-    roles: ["admin", "editor"],
-  },
-  {
-    path: "/nested/menu1/menu1-1",
-    component: Menu1_1,
-    roles: ["admin", "editor"],
-  },
-  {
-    path: "/nested/menu1/menu1-2/menu1-2-1",
-    component: Menu1_2_1,
-    roles: ["admin", "editor"],
-  },
-  { path: "/table", component: Table, roles: ["admin", "editor"] },
+  { path: "/loophole/loopholedatabse", component: LooholeDataBase, roles: ["admin", "editor"]},
+ 
   { path: "/user", component: User, roles: ["admin"] },
   { path: "/error/404", component: Error404 },
 ];
