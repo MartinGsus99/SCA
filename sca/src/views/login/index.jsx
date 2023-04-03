@@ -59,7 +59,7 @@ const Login = (props) => {
       <div className="login-container">
         <Form onSubmit={handleSubmit} className="content">
           <div className="title">
-            <h2>用户登录</h2>
+            <h2>软件成分分析系统</h2>
           </div>
           <Spin spinning={loading} tip="登录中...">
             <Form.Item>

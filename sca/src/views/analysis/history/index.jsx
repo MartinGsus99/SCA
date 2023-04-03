@@ -53,22 +53,27 @@ class History extends React.Component {
         {
           title: '序号',
           dataIndex: 'id',
+          key:'id'
         },
         {
           title: '检测名称',
           dataIndex: 'taskName',
+          key:'taskName',
         },
         {
           title: '文件名称',
           dataIndex: 'reportName',
+          key:'reportName'
         },
         {
           title: '创建时间',
           dataIndex: 'gmtCreate',
+          key:'gmtCreate',
         },
         {
           title: '执行状态',
           dataIndex: 'status',
+          key:'status',
           render: (row) => {
             if (row == 1) {
               return "检测完成";
@@ -80,6 +85,7 @@ class History extends React.Component {
         {
           title: '检测耗时',
           dataIndex: 'cost',
+          key:'cost',
         },
       ],
 
@@ -90,9 +96,9 @@ class History extends React.Component {
         dateScope: "",
       },
       listQuery: {
-        total: 0,
-        page: 1,
-        limit: 10,
+        current:10,
+        pageSize: 10, // 每页显示的条数
+        total: 0, // 数据总数
       },
       data: [],
 
@@ -101,31 +107,45 @@ class History extends React.Component {
 
   fetchData() {
     let data = this.state.queryReportKeys;
-    data.page = this.state.listQuery.page;
-    data.rows = this.state.listQuery.limit;
+    data.page = this.state.listQuery.current;
+    data.rows = this.state.listQuery.pageSize;
     getTaskReportList(data).then((res) => {
       const result = res.data.data;
+      //console.log('res',result)
+      const pageData={
+        total:res.data.total,
+        pageSize:res.data.page,
+      }
       this.setState({
         data: result,
+        listQuery:pageData,
       })
+      console.log('state',this.state.data);
     })
   }
 
-  componentWillMount() {
+  pagination(current,pageSize){
+      console.log("分页");
+      let data={};
+      data.page = current;
+      data.rows = pageSize;
+      let datas=[]
+      getTaskReportList(data).then((res) => {
+        datas = res.data.data;
+        console.log(datas);
+      })
+  }
+
+  componentDidMount(){
     this.fetchData();
   }
-
-  componentDidMount() {
-
-  }
-
 
   render() {
     return (
       <div>
         <Card><DynamicFilter formList={this.state.formList} queryKeys={this.state.queryReportKeys} searchInfor={this.printData}></DynamicFilter></Card>
         <Card>
-          <DynamicTable uiList={this.state.uiList} data={this.state.data} listQuery={this.state.listQuery}></DynamicTable>
+          <DynamicTable uiList={this.state.uiList} data={this.state.data} pageData={this.state.listQuery} pagination={this.pagination}></DynamicTable>
         </Card>
       </div>
     );

@@ -48,7 +48,7 @@ class DynamicFilter extends Component {
                 if (item.type == 'input') {
                     const inputItem = (
                         <Form.Item key={item.key} label={item.label} name={item.key} >
-                          
+                          <Input></Input>
                         </Form.Item>
                     )
                     formItemList.push(inputItem);

@@ -62,15 +62,14 @@ class CWETable extends Component {
         let data = this.state.queryKeys;
         data.page = this.state.listCWEQuery.page
         data.rows = this.state.listCWEQuery.limit
-        console.log(data);
         getCWELoophole(data).then((res) => {
-            console.log(res.data);
             this.setState({
                 data: res.data.data,
             })
         })
     }
 
+    
 
     componentDidMount() {
         this.getCWETableData();
