@@ -59,25 +59,25 @@ const menuList = [
   },
   {
     title: "系统管理",
-    path: "/sysManage",
+    path: "/admin",
     icon: "icon-a-bianzu13-33",
     roles:["admin","editor","guest"],
     children: [
       {
         title: "角色管理",
-        path: "/sysManage/role",
+        path: "/admin/role",
         roles:["admin"],
         icon:'icon-adduser',
       },
       {
         title: "用户管理",
-        path: "/sysManage/user",
+        path: "/admin/user",
         roles:["admin"],
         icon:'icon-user',
       },
       {
         title: "系统日志",
-        path: "/sysManage/log",
+        path: "/admin/log",
         roles:["admin"],
         icon:'icon-rizhi',
       },

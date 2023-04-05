@@ -53,27 +53,27 @@ class History extends React.Component {
         {
           title: '序号',
           dataIndex: 'id',
-          key:'id'
+          key: 'id'
         },
         {
           title: '检测名称',
           dataIndex: 'taskName',
-          key:'taskName',
+          key: 'taskName',
         },
         {
           title: '文件名称',
           dataIndex: 'reportName',
-          key:'reportName'
+          key: 'reportName'
         },
         {
           title: '创建时间',
           dataIndex: 'gmtCreate',
-          key:'gmtCreate',
+          key: 'gmtCreate',
         },
         {
           title: '执行状态',
           dataIndex: 'status',
-          key:'status',
+          key: 'status',
           render: (row) => {
             if (row == 1) {
               return "检测完成";
@@ -85,7 +85,7 @@ class History extends React.Component {
         {
           title: '检测耗时',
           dataIndex: 'cost',
-          key:'cost',
+          key: 'cost',
         },
       ],
 
@@ -96,7 +96,7 @@ class History extends React.Component {
         dateScope: "",
       },
       listQuery: {
-        current:10,
+        current: 10,
         pageSize: 10, // 每页显示的条数
         total: 0, // 数据总数
       },
@@ -112,31 +112,43 @@ class History extends React.Component {
     getTaskReportList(data).then((res) => {
       const result = res.data.data;
       //console.log('res',result)
-      const pageData={
-        total:res.data.total,
-        pageSize:res.data.page,
+      const pageData = {
+        total: res.data.total,
+        pageSize: res.data.page,
       }
       this.setState({
         data: result,
-        listQuery:pageData,
+        listQuery: pageData,
       })
-      console.log('state',this.state.data);
+      console.log('state', this.state.data);
     })
   }
 
-  pagination(current,pageSize){
-      console.log("分页");
-      let data={};
-      data.page = current;
-      data.rows = pageSize;
-      let datas=[]
-      getTaskReportList(data).then((res) => {
-        datas = res.data.data;
-        console.log(datas);
+  pagination(current, pageSize) {
+    console.log("分页");
+    let data = this.state.queryReportKeys;
+    data.page = current;
+    data.rows = pageSize;
+    getTaskReportList(data).then((res) => {
+      const result = res.data.data;
+      //console.log('res',result)
+      const pageData = {
+        total: res.data.total,
+        pageSize: res.data.page,
+      }
+      this.setState({
+        data: result,
+        listQuery: pageData,
       })
+      console.log('state', this.state.data);
+    })
   }
 
-  componentDidMount(){
+  componentWillMount() {
+    this.fetchData();
+  }
+
+  componentDidMount() {
     this.fetchData();
   }
 

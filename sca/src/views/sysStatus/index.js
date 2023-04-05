@@ -19,30 +19,35 @@ class SysBoard extends Component {
         CPUGauge: 0,
         ramUsage: 20,
         networkFlow: 100,
-        isLoading:false,
-        listData:[],
-        queryKeys:{},
-        uiList:[{
-            title:'任务名称',
-            dataIndex:'taskName',
-            key:'taskName',
+        isLoading: false,
+        listData: [],
+        queryKeys: {},
+        uiList: [{
+            title: '任务名称',
+            dataIndex: 'taskName',
+            key: 'taskName',
         },
         {
-            title:'创建时间',
-            dataIndex:'gmtCreate',
-            key:'gmtCreate',
+            title: '创建时间',
+            dataIndex: 'gmtCreate',
+            key: 'gmtCreate',
         },
         {
-            title:'检测耗时',
-            dataIndex:'cost',
-            key:'cost',
+            title: '检测耗时',
+            dataIndex: 'cost',
+            key: 'cost',
         },
         {
-            title:'创建人',
-            dataIndex:'creator',
-            key:'creator'
+            title: '创建人',
+            dataIndex: 'creator',
+            key: 'creator'
         }
-    ]
+        ],
+        listQuery: {
+            current: 10,
+            pageSize: 10, // 每页显示的条数
+            total: 0, // 数据总数
+          },
 
     }
 
@@ -73,8 +78,8 @@ class SysBoard extends Component {
             if (res.data.success) {
                 console.log(res.data.data)
                 this.setState({
-                    isLoading:false,
-                    listData:res.data.data,
+                    isLoading: false,
+                    listData: res.data.data,
                 })
             }
         });
@@ -110,7 +115,7 @@ class SysBoard extends Component {
             </Row>
 
             <Row>
-                <DynamicTable uiList={this.state.uiList} data={this.state.listData}></DynamicTable>
+                <DynamicTable uiList={this.state.uiList} data={this.state.listData} pageData={this.state.listQuery} ></DynamicTable>
             </Row>
         </div>);
     }

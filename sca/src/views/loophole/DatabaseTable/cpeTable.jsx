@@ -18,9 +18,9 @@ class CWETable extends Component {
             dateScope: '',
         },
         listCPEQuery: {
-            limit: 10,
-            total: 0,
-            page: 1,
+            current: 10,
+            pageSize: 10, // 每页显示的条数
+            total: 0, // 数据总数
         },
         data: [],
 
@@ -90,8 +90,8 @@ class CWETable extends Component {
 
     getCPETableData() {
         let data = this.state.queryKeys;
-        data.page = this.state.listCPEQuery.page;
-        data.rows = this.state.listCPEQuery.limit;
+        data.page = this.state.listCPEQuery.current;
+        data.rows = this.state.listCPEQuery.pageSize;
         console.log(data);
         getCPELoophole(data).then((res) => {
             console.log(res.data);
@@ -111,7 +111,7 @@ class CWETable extends Component {
             
              <Card>
                    <Filter formList={this.state.queryList} queryKeys={this.state.queryKeys}></Filter>
-                <DynamicTable uiList={this.state.cpeUIData} data={this.state.data} listQuery={this.state.listCPEQuery}></DynamicTable>
+                <DynamicTable uiList={this.state.cpeUIData} data={this.state.data} pageData={this.state.listCPEQuery} ></DynamicTable>
           
              </Card>
         );

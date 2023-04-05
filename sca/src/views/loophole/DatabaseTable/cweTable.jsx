@@ -15,9 +15,9 @@ class CWETable extends Component {
             cweName: '',
         },
         listCWEQuery: {
-            limit: 10,
-            total: 0,
-            page: 1,
+            current: 10,
+            pageSize: 10, // 每页显示的条数
+            total: 0, // 数据总数
         },
         data: [],
 
@@ -60,8 +60,8 @@ class CWETable extends Component {
 
     getCWETableData() {
         let data = this.state.queryKeys;
-        data.page = this.state.listCWEQuery.page
-        data.rows = this.state.listCWEQuery.limit
+        data.page = this.state.listCWEQuery.current
+        data.rows = this.state.listCWEQuery.pageSize
         getCWELoophole(data).then((res) => {
             this.setState({
                 data: res.data.data,
@@ -79,7 +79,7 @@ class CWETable extends Component {
         return (
             <Card>
                 <Filter formList={this.state.queryList} queryKeys={this.state.queryKeys}></Filter>
-                <DynamicTable uiList={this.state.cweUIData} data={this.state.data} listQuery={this.state.listQuery}></DynamicTable>
+                <DynamicTable uiList={this.state.cweUIData} data={this.state.data} pageData={this.state.listCWEQuery}></DynamicTable>
             </Card>
         );
     }

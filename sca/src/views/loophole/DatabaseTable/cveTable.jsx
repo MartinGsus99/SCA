@@ -14,23 +14,23 @@ class CVETable extends Component {
             dateScope: '',
         },
         listCVEQuery: {
-            limit: 10,
-            total: 0,
-            page: 1,
+            current: 10,
+            pageSize: 10, // 每页显示的条数
+            total: 0, // 数据总数
         },
-        data:[],
-        uiList:[],
+        data: [],
+        uiList: [],
     }
 
     getCVETableData() {
-        let data =this.state.queryKeys;
-        data.page = this.state.listCVEQuery.page
-        data.rows = this.state.listCVEQuery.limit
+        let data = this.state.queryKeys;
+        data.page = this.state.listCVEQuery.current
+        data.rows = this.state.listCVEQuery.pageSize
         console.log(data);
         getCVELoophole(data).then((res) => {
             console.log(res);
             this.setState({
-                data:[]
+                data: []
             })
         })
     }
@@ -42,7 +42,7 @@ class CVETable extends Component {
 
     render() {
         return (
-            <DynamicTable uiList={this.state.uiList} data={this.state.data} listQuery={this.state.listQuery}></DynamicTable>
+            <DynamicTable uiList={this.state.uiList} data={this.state.data} pageData={this.state.listCVEQuery}></DynamicTable>
         );
     }
 }

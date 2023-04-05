@@ -10,10 +10,10 @@ class DynamicTable extends Component {
 
     }
 
-     onShowSizeChange = (current, pageSize) => {
+    onShowSizeChange = (current, pageSize) => {
         console.log(current, pageSize);
-        this.props.pagination(current,pageSize);
-      };
+        // this.props.pagination(current, pageSize);
+    };
 
     render() {
         console.log(this.state.dataSource);

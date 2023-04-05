@@ -46,3 +46,54 @@ export function addUser(data) {
     data
   })
 }
+
+
+export function getUserList(data) {
+  return request({
+    url: '/sys/user/page',
+    method: 'get',
+    params:{
+      ...data
+    },
+  })
+}
+
+export function userAdd(data) {
+  return request({
+    url: '/sys/user/add',
+    method: 'post',
+    data
+  })
+}
+
+export function userEdit(data, id) {
+  return request({
+    url: `/sys/user/modify/${id}`,
+    method: 'post',
+    data
+  })
+}
+
+export function userDel(data, id) {
+  return request({
+    url: `/sys/user/remove/${id}`,
+    method: 'post',
+    data
+  })
+}
+
+export function setUserPassword(data) {
+  return request({
+    url: '/sys/user/change/password',
+    method: 'post',
+    data
+  })
+}
+
+export function resetPassword(data, id) {
+  return request({
+    url: `/sys/reset/password/${id}`,
+    method: 'post',
+    data
+  })
+}

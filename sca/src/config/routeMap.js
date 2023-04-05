@@ -32,7 +32,23 @@ const User = Loadable({
 const LooholeDataBase=Loadable({
   loader: () => import(/*webpackChunkName:'User'*/ "@/views/loophole"),
   loading: Loading,
+});
+
+const UserAdmin=Loadable({
+  loader:()=>import("@/views/admin/user"),
+  loading:Loading,
 })
+
+const RoleAdmin=Loadable({
+  loader:()=>import("@/views/admin/role"),
+  loading:Loading,
+})
+
+const Log=Loadable({
+  loader:()=>import("@/views/admin/log"),
+  loading:Loading,
+})
+
 
 
 
@@ -46,7 +62,17 @@ export default [
   { path: "/analysis/execute", component: ContentAnalysis, roles: ["admin", "editor"]},
   { path: "/analysis/history", component: History, roles: ["admin", "editor"]},
   { path: "/loophole/loopholedatabse", component: LooholeDataBase, roles: ["admin", "editor"]},
- 
+
+  {
+    path:"/admin/user",component:UserAdmin,roles:["admin"]
+  },
+  {
+    path:"/admin/role",component:RoleAdmin,roles:["admin"]
+  },
+  
+  {
+    path:"/admin/log",component:Log,roles:["admin"]
+  },
   { path: "/user", component: User, roles: ["admin"] },
   { path: "/error/404", component: Error404 },
 ];
