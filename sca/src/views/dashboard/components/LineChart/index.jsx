@@ -10,7 +10,7 @@ class LineChart extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.chartData !== this.props.pieChartData) {
+    if (nextProps.chartData !== this.props.lineChartData) {
       this.initChart();
     }
   }
@@ -66,7 +66,7 @@ class LineChart extends Component {
   initChart() {
     if (!this.el) return;
     this.setState({ chart: echarts.init(this.el, "macarons") }, () => {
-      this.setOptions(this.props.pieChartData);
+      this.setOptions(this.props.lineChartData);
     });
   }
 

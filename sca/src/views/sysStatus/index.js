@@ -91,7 +91,7 @@ class SysBoard extends Component {
     }
 
     componentDidMount() {
-        this.timer = setInterval(() => this.getSysStatusData(), 2000);
+        // this.timer = setInterval(() => this.getSysStatusData(), 2000);
     }
 
     componentWillUnmount() {

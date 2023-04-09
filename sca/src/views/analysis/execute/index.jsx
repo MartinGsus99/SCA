@@ -68,8 +68,8 @@ class ContentAnalysis extends React.Component {
       },
       listQuery: {
         total: 0,
-        page: 1,
-        limit: 10,
+        current: 1,
+        pageSize: 10,
       },
       data: [],
       formItems: [
@@ -150,12 +150,17 @@ class ContentAnalysis extends React.Component {
 
   fetchData() {
     let data = this.state.queryReportKeys;
-    data.page = this.state.listQuery.page;
-    data.rows = this.state.listQuery.limit;
+    data.page = this.state.listQuery.current;
+    data.rows = this.state.listQuery.pageSize;
     getTask(data).then((res) => {
       const result = res.data.data;
+      const pageData = {
+        total: res.data.total,
+        pageSize: res.data.page,
+    }
       this.setState({
         data: result,
+        listQuery: pageData
       })
     })
   }
@@ -191,7 +196,7 @@ class ContentAnalysis extends React.Component {
           <Button onClick={showModal}>新增任务</Button>
         </Card>
         <Card>
-          <DynamicTable uiList={this.state.uiList} data={this.state.data}></DynamicTable>
+          <DynamicTable uiList={this.state.uiList} data={this.state.data} pageData={this.state.listQuery}></DynamicTable>
         </Card>
         <Modal title="Test Modal" visible={this.state.visible}
           onOk={handleOk

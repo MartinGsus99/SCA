@@ -53,6 +53,18 @@ class PieChart extends Component {
     });
   }
 
+  dispose() {
+    if (!this.state.chart) {
+      return;
+    }
+ 
+    this.setState({ chart: null });
+  }
+
+  componentWillUnmount() {
+    this.dispose();
+  }
+
   render() {
     return (
       <div ref={(el) => (this.el = el)} style={this.props.styles }></div>

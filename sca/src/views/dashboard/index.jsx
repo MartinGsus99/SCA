@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Row, Col, Card } from "antd";
-import "./Mycomponents/lineChart.less";
 import PieChart from './components/PieChart/'
 import LineChart from './components/LineChart'
 import { getIndexChart } from '../../api/chart';
@@ -11,7 +10,7 @@ class DashBoard extends Component {
     super(props);
   }
   state = {
-    lineChartDatas: {},
+    lineChartDatas: [],
     pieDatas: [],
     age:0,
   }
@@ -28,12 +27,14 @@ class DashBoard extends Component {
           temp.value = item[1].number;
           pieData.push(temp);
         });
+        console.log('piedata',pieData);
         this.setState({
-          pieDatas: pieData
+          pieDatas: pieData,
+          lineChartDatas: [],
         });
       }
     }).catch((err)=>{
-      console.log(err);
+      console.log('error',err);
     })
   }
 
@@ -53,7 +54,7 @@ class DashBoard extends Component {
           </Col>
           <Col className="col" span={15}>
           <Card>
-              <LineChart pieChartData={this.state.pieDatas} chartTitle={'2023年检测分布'} subTitle={'Distribution of Language'} styles={{width:1100,height:400}}></LineChart>
+              <LineChart pieChartData={this.state.lineChartDatas} chartTitle={'2023年检测分布'} subTitle={'Distribution of Language'} styles={{width:1100,height:400}}></LineChart>
             </Card>
           </Col>
 

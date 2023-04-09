@@ -11,15 +11,38 @@ class CVETable extends Component {
             type: '0',
             cveId: '',
             kind: '0',
-            dateScope: '',
+            start_date: '',
+            end_date:'',
         },
         listCVEQuery: {
-            current: 10,
+            current: 1,
             pageSize: 10, // 每页显示的条数
             total: 0, // 数据总数
         },
         data: [],
-        uiList: [],
+        uiList: [{
+            dataIndex: 'cveId',
+            title: 'CVE编号',
+        },
+
+        {
+            dataIndex: 'gmtPublished',
+            title: '收录时间',
+        },
+        {
+            dataIndex: 'gmtModified',
+            title: '更新时间',
+        },
+        {
+            dataIndex: 'description',
+            title: '描述',
+            render: (row) => {
+                if (row.length >= 50) {
+                    return row.slice(0, 50) + '......';
+                }
+            }
+        },
+    ],
     }
 
     getCVETableData() {
@@ -28,9 +51,14 @@ class CVETable extends Component {
         data.rows = this.state.listCVEQuery.pageSize
         console.log(data);
         getCVELoophole(data).then((res) => {
-            console.log(res);
+            console.log(res.data.data);
+            const pageData = {
+                total: res.data.total,
+                pageSize: res.data.page,
+            }
             this.setState({
-                data: []
+                data: res.data.data,
+                listCVEQuery: pageData,
             })
         })
     }

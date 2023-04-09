@@ -15,7 +15,7 @@ class CWETable extends Component {
             cweName: '',
         },
         listCWEQuery: {
-            current: 10,
+            current: 1,
             pageSize: 10, // 每页显示的条数
             total: 0, // 数据总数
         },
@@ -63,13 +63,18 @@ class CWETable extends Component {
         data.page = this.state.listCWEQuery.current
         data.rows = this.state.listCWEQuery.pageSize
         getCWELoophole(data).then((res) => {
+            const pageData = {
+                total: res.data.total,
+                pageSize: res.data.page,
+            }
             this.setState({
                 data: res.data.data,
+                listCWEQuery: pageData,
             })
         })
     }
 
-    
+
 
     componentDidMount() {
         this.getCWETableData();

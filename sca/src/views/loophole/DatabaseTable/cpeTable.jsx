@@ -15,7 +15,8 @@ class CWETable extends Component {
             type: '1',
             kind: '0',
             cpeId: '',
-            dateScope: '',
+            start_date: '',
+            end_date:'',
         },
         listCPEQuery: {
             current: 10,
@@ -95,8 +96,13 @@ class CWETable extends Component {
         console.log(data);
         getCPELoophole(data).then((res) => {
             console.log(res.data);
+            const pageData = {
+                total: res.data.total,
+                pageSize: res.data.page,
+            }
             this.setState({
                 data: res.data.data,
+                listCPEQuery: pageData,
             })
         })
     }

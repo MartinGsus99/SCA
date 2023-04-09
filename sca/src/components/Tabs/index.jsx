@@ -16,7 +16,7 @@ class DynamicTabs extends Component {
     render() {
         return (
             <Card>
-                <Tabs defaultActiveKey={'3'} items={this.props.items} onChange={this.onChange} >
+                <Tabs defaultActiveKey={'1'} items={this.props.items} onChange={this.onChange} >
                     {
                         this.props.items.map((item) => {
                             return (
