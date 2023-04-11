@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { useState } from 'react';
 import DynamicFilter from '@/components/Filter';
-import { Card } from 'antd';
+import { Card, Divider } from 'antd';
 import DynamicTable from '@/components/DynamicTable';
 
 import {
@@ -9,105 +10,114 @@ import {
 import {
     roleList, addUserRole
 } from '../../../api/user';
-class UserAdmin extends Component {
-    constructor(props) {
-        super(props);
+
+
+
+function UserAdmin() {
+    const [count, setCount] = useState(100);
+    const changeData = () => {
+        setCount(count + 1);
     }
-    state = {
-        queryKeys: {
-            name: '',
-            username: '',
-        },
-        queryRules: [{
-            id: '1',
-            key: 'name',
-            label: '用户名：',
-            type: 'input',
-            placeholder: '请输入用户名',
+
+    const [uiList, setUiList] = useState([
+        {
+            key: 'id',
+            dataIndex: 'id',
+            title: 'ID'
         },
         {
-            id: '2',
+            key: 'name',
+            dataIndex: 'name',
+            title: '用户名'
+        },
+        {
             key: 'username',
-            label: '账号：',
-            type: 'input',
-            placeholder: '请输入账号',
+            dataIndex: 'username',
+            title: '账号'
         },
+        {
+            key: 'roleNameStr',
+            dataIndex: 'roleNameStr',
+            title: '角色',
+            tags: 'primary',
+        },
+        {
+            key: 'action',
+            title: '操作',
+            dataIndex: 'action',
+            render: (text, record) => (
+                <span>
+                    <a onClick={changeData}>编辑</a>
+                    <Divider type="vertical" />
+                    <a>删除</a>
+                    <Divider type="vertical" />
+                    <a>重置密码</a>
+                </span>
+            ),
+        },
+    ]);
 
-        ],
-        listQuery: {
-            total: 0,
-            current: 1,
-            pageSize: 10,
-        },
-        listRoleQuery: {
-            total: 0,
-            page: 1,
-            limit: 10,
-        },
-        listData: [],
-        uiData: [
-            {
-                key: 'id',
-                dataIndex: 'id',
-                title: 'ID'
-            },
-            {
-                key: 'name',
-                dataIndex: 'name',
-                title: '用户名'
-            },
-            {
-                key: 'username',
-                dataIndex: 'username',
-                title: '账号'
-            },
-            {
-                key: 'roleNameStr',
-                dataIndex: 'roleNameStr',
-                title: '角色'
-            }
-        ],
-    }
+    const [queryKeys,setQueryKeys]=useState({
+        name:'',
+        username:'',
+    });
 
-    fetchData() {
-        console.log("get data")
-        let data = this.state.queryKeys
-        data.page = this.state.listQuery.current
-        data.rows = this.state.listQuery.pageSize
+    const [queryRules, setQueryRules] = useState([{
+        id: '1',
+        key: 'name',
+        label: '用户名：',
+        type: 'input',
+        placeholder: '请输入用户名',
+    },
+    {
+        id: '2',
+        key: 'username',
+        label: '账号：',
+        type: 'input',
+        placeholder: '请输入账号',
+    },]);
+
+    const [listQuery, setListQuery] = useState({
+        total: 0,
+        current: 1,
+        pageSize: 10,
+    })
+
+
+    const [listRoleQuery,setListRoleQuery]=useState({
+        total: 0,
+        page: 1,
+        limit: 10,
+    })
+
+    const fetchData = () => {
+        let data = queryKeys
+        data.page = listQuery.current
+        data.rows = listQuery.pageSize
         getUserList(data).then((res) => {
             const result = res.data.data;
-            console.log('res', result)
+            console.log("get data",result);
             const pageData = {
                 total: res.data.total,
                 pageSize: res.data.page,
             }
-            this.setState({
-                listData: result,
-                listQuery: pageData,
-            })
-            console.log('state', this.state.data);
+            return result;
         })
-    }
+    };
 
-    componentWillMount() {
-        this.fetchData();
-    }
+    const [listData,setListData]=useState(fetchData());
 
-    componentDidMount() {
-        this.fetchData();
-    }
+    
 
+    return (
+        <div>
+            {/* <Card><DynamicFilter queryKeys={queryKeys} queryRules={queryRules}></DynamicFilter></Card> */}
+            <Card>
+                <DynamicTable count={count} uiList={uiList} data={listData} pageData={listQuery} ></DynamicTable>
+            </Card>
+        </div>
+    )
 
-    render() {
-        return (
-            <div>
-                <Card><DynamicFilter formList={this.state.queryRules} queryKeys={this.state.queryKeys} searchInfor={this.printData}></DynamicFilter></Card>
-                <Card>
-                    <DynamicTable uiList={this.state.uiData} data={this.state.listData} pageData={this.state.listQuery} pagination={this.pagination}></DynamicTable>
-                </Card>
-            </div>
-        );
-    }
 }
 
 export default UserAdmin;

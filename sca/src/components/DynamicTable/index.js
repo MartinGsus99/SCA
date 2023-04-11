@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Table, Pagination } from 'antd';
-
+import { Space, Table, Tag, Pagination } from 'antd';
+import { useState } from 'react';
+const { Column, ColumnGroup } = Table;
 
 class DynamicTable extends Component {
     constructor(props) {
@@ -15,21 +16,14 @@ class DynamicTable extends Component {
         // this.props.pagination(current, pageSize);
     };
 
+
+
     render() {
-        console.log(this.state.dataSource);
         return (
             <div>
-                <Table rowKey="id" columns={this.props.uiList} dataSource={this.props.data} pagination={false} />
-                <br></br>
-                <Pagination
-                    showSizeChanger
-                    total={this.props.pageData.total}
-                    showTotal={(total) => `Total ${total} 条`}
-                    defaultPageSize={this.props.pageData.pageSize}
-                    defaultCurrent={this.props.pageData.current} onChange={this
-                        .onShowSizeChange}
-                />
-            </div>
+               <div>{this.props.count}</div>
+                <Table dataSource={this.props.data} columns={this.props.uiList} pagination={this.props.pageData}></Table>
+            </div >
         );
     }
 }

@@ -32,7 +32,7 @@ service.interceptors.response.use(
   (response) => {
     const res = response.data;
     if(!res.success){
-      console.log(response);
+      // console.log(response);
       return response;
     }else{
       
