@@ -1,78 +1,110 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import DynamicTable from '@/components/DynamicTable';
 import { getCVELoophole } from '@/api/knowledge';
+import { useState } from 'react';
 
-class CVETable extends Component {
-    constructor(props) {
-        super(props);
-    }
-    state = {
-        queryKeys: {
-            type: '0',
-            cveId: '',
-            kind: '0',
-            start_date: '',
-            end_date:'',
-        },
-        listCVEQuery: {
-            current: 1,
-            pageSize: 10, // 每页显示的条数
-            total: 0, // 数据总数
-        },
-        data: [],
-        uiList: [{
-            dataIndex: 'cveId',
-            title: 'CVE编号',
-        },
 
-        {
-            dataIndex: 'gmtPublished',
-            title: '收录时间',
+function CVETable() {
+    const [queryKeys, setqueryKeys] = useState({
+        type: '0',
+        cveId: '',
+        kind: '0',
+        start_date: '',
+        end_date: '',
+    });
+
+    const [listCVEQuery, setListCVEQuery] = useState({ 
+        page: 1,
+        pageSize: 10,
+        total: 0,
+        showSizeChanger: true,
+        showQuickJumper: true,
+        showTotal: (total) => `共 ${total} 条`,
+        onChange:(page, pageSize) => {
+            let query = JSON.parse(JSON.stringify(listCVEQuery))
+            listCVEQuery.page = page
+            setListCVEQuery(query)
+            fetchCVETableData(listCVEQuery);
+          },
+        onShowSizeChange:(page, pageSize) => {
+            let query = JSON.parse(JSON.stringify(listCVEQuery))
+            listCVEQuery.pageSize = pageSize
+            setListCVEQuery(query)
+            fetchCVETableData(listCVEQuery);
         },
-        {
-            dataIndex: 'gmtModified',
-            title: '更新时间',
-        },
-        {
-            dataIndex: 'description',
-            title: '描述',
-            render: (row) => {
-                if (row.length >= 50) {
-                    return row.slice(0, 50) + '......';
-                }
+     });
+
+    const [uiList, setuilist] = useState([{
+        dataIndex: 'cveId',
+        title: 'CVE编号',
+    },
+
+    {
+        dataIndex: 'gmtPublished',
+        title: '收录时间',
+    },
+    {
+        dataIndex: 'gmtModified',
+        title: '更新时间',
+    },
+    {
+        dataIndex: 'description',
+        title: '描述',
+        render: (row) => {
+            if (row.length >= 50) {
+                return row.slice(0, 50) + '......';
             }
-        },
-    ],
+        }
     }
+    ])
 
-    getCVETableData() {
-        let data = this.state.queryKeys;
-        data.page = this.state.listCVEQuery.current
-        data.rows = this.state.listCVEQuery.pageSize
+    const [cveData, setCveData] = useState([]);
+
+
+    const getCVETableData = () => {
+        let data = queryKeys;
+        data.page = listCVEQuery.page;
+        data.rows = listCVEQuery.pageSize
         console.log(data);
         getCVELoophole(data).then((res) => {
-            console.log(res.data.data);
+            const result = res.data.data;
             const pageData = {
                 total: res.data.total,
-                pageSize: res.data.page,
+                pageSize: res.data.rows,
+                current:res.data.page
             }
-            this.setState({
-                data: res.data.data,
-                listCVEQuery: pageData,
-            })
+            setCveData(result.reverse());
+            setListCVEQuery(pageData);
+        })
+    }
+
+    const fetchCVETableData = (listCVEQueryData) => {
+        let data = queryKeys;
+        console.log('listQ',listCVEQueryData);
+        data.page = listCVEQueryData.page;
+        data.rows = listCVEQueryData.pageSize
+        console.log('data',data);
+        getCVELoophole(data).then((res) => {
+            const result = res.data.data;
+            const pageData = {
+                total: res.data.total,
+                pageSize: res.data.rows,
+                current:res.data.page
+            }
+            setCveData(result.reverse());
+            setListCVEQuery(pageData);
         })
     }
 
 
-    componentDidMount() {
-        this.getCVETableData();
-    }
+    useEffect(() => {
+        getCVETableData();
+    }, [])
 
-    render() {
-        return (
-            <DynamicTable uiList={this.state.uiList} data={this.state.data} pageData={this.state.listCVEQuery}></DynamicTable>
-        );
-    }
+    return (
+        <DynamicTable uiList={uiList} data={cveData} pageData={listCVEQuery} getData={getCVETableData}></DynamicTable>
+    )
 }
 
 export default CVETable;
+

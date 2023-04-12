@@ -22,9 +22,9 @@ class Log extends Component {
        ],
 
         listQuery: {
-            total: 0,
             current: 1,
-            pageSize: 10,
+            pageSize: 10, // 每页显示的条数
+            total: 0, // 数据总数
         },
     
         uiList: [

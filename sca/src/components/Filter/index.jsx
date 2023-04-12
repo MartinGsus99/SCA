@@ -41,7 +41,7 @@ class DynamicFilter extends Component {
     }
 
     initFilterForm = () => {
-        const { formList } = this.props;
+        const [ ...formList ] = this.props.formList;
         const formItemList = [];
         if (formList.length > 0) {
             formList.map((item) => {

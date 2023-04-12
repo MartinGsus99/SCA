@@ -65,7 +65,8 @@ class CWETable extends Component {
         getCWELoophole(data).then((res) => {
             const pageData = {
                 total: res.data.total,
-                pageSize: res.data.page,
+                pageSize: res.data.rows,
+                current:res.data.page
             }
             this.setState({
                 data: res.data.data,
