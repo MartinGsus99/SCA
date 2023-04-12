@@ -16,7 +16,7 @@ class CWETable extends Component {
             kind: '0',
             cpeId: '',
             start_date: '',
-            end_date:'',
+            end_date: '',
         },
         listCPEQuery: {
             current: 10,
@@ -27,40 +27,40 @@ class CWETable extends Component {
 
         queryList: [
             {
-              id: 1,
-              label: 'CPE编号',
-              key: 'cpeId',
-              placeholder: 'CPE编号',
-              type: 'input',
+                id: 1,
+                label: 'CPE编号',
+                key: 'cpeId',
+                placeholder: 'CPE编号',
+                type: 'input',
             },
             {
-              id: 2,
-              label: '检索类型',
-              key: 'type',
-              placeholder: '检索类型',
-              type: 'select',
-              options:[
-                {
-                    label: '收录时间',
-                    value: '1',
-      
-                  },
-                  {
-                    label: '更新时间',
-                    value: '0',
-      
-                  },
-              ]
+                id: 2,
+                label: '检索类型',
+                key: 'type',
+                placeholder: '检索类型',
+                type: 'select',
+                options: [
+                    {
+                        label: '收录时间',
+                        value: '1',
+
+                    },
+                    {
+                        label: '更新时间',
+                        value: '0',
+
+                    },
+                ]
             },
-       
+
             {
-              id: 3,
-              label: '时间范围',
-              key: 'timerange',
-              placeholder: '请选择时间范围',
-              type: 'daterange',
+                id: 3,
+                label: '时间范围',
+                key: 'timerange',
+                placeholder: '请选择时间范围',
+                type: 'daterange',
             }
-          ],
+        ],
 
         cpeUIData: [
             {
@@ -114,12 +114,14 @@ class CWETable extends Component {
 
     render() {
         return (
-            
-             <Card>
-                   <Filter formList={this.state.queryList} queryKeys={this.state.queryKeys}></Filter>
-                <DynamicTable uiList={this.state.cpeUIData} data={this.state.data} pageData={this.state.listCPEQuery} ></DynamicTable>
-          
-             </Card>
+            <div>
+                <Card>
+                    <Filter formList={this.state.queryList} queryKeys={this.state.queryKeys}></Filter>
+                </Card>
+                <Card>
+                    <DynamicTable uiList={this.state.cpeUIData} data={this.state.data} pageData={this.state.listCPEQuery} ></DynamicTable>
+                </Card>
+            </div>
         );
     }
 }

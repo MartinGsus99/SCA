@@ -66,7 +66,7 @@ class CWETable extends Component {
             const pageData = {
                 total: res.data.total,
                 pageSize: res.data.rows,
-                current:res.data.page
+                current: res.data.page
             }
             this.setState({
                 data: res.data.data,
@@ -83,10 +83,14 @@ class CWETable extends Component {
 
     render() {
         return (
-            <Card>
-                <Filter formList={this.state.queryList} queryKeys={this.state.queryKeys}></Filter>
-                <DynamicTable uiList={this.state.cweUIData} data={this.state.data} pageData={this.state.listCWEQuery}></DynamicTable>
-            </Card>
+            <div>
+                <Card>
+                    <Filter formList={this.state.queryList} queryKeys={this.state.queryKeys}></Filter>
+                </Card>
+                <Card>
+                    <DynamicTable uiList={this.state.cweUIData} data={this.state.data} pageData={this.state.listCWEQuery}></DynamicTable>
+                </Card>
+            </div>
         );
     }
 }

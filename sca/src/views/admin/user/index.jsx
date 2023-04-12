@@ -1,41 +1,67 @@
-import React, {  useEffect } from 'react';
-import { useState } from 'react';
-import DynamicFilter from '@/components/Filter';
-import { Card, Divider, Modal, Button } from 'antd';
-import DynamicTable from '@/components/DynamicTable';
+import React, { useEffect } from 'react'
+import { useState } from 'react'
+import DynamicFilter from '@/components/Filter'
+import { Card, Divider, Modal, Button } from 'antd'
+import DynamicTable from '@/components/DynamicTable'
 
 import {
     getUserList, userDel, userAdd, userEdit, resetPassword
-} from '../../../api/user';
+} from '../../../api/user'
 import {
     roleList, addUserRole
-} from '../../../api/user';
+} from '../../../api/user'
 
 
 
-function UserAdmin() {
-    const [count, setCount] = useState(100);
-    const changeData = () => {
-        setCount(count + 1);
-    }
+function UserAdmin () {
 
-    const [modalFlag, setModalFlag] = useState(false);
+    const [modalFlag, setModalFlag] = useState(false)
 
     const showModal = () => {
-        setModalFlag(true);
-    };
+        setModalFlag(true)
+    }
 
     const hideModal = () => {
-        setModalFlag(false);
-    };
+        setModalFlag(false)
+    }
 
     const deleteUser = () => {
-        setModalFlag(true);
+        setModalFlag(true)
     }
 
     const editUser = () => {
 
     }
+
+    const [listData, setListData] = useState([])
+
+    const [listQuery, setListQuery] = useState({
+        page: 1,
+        pageSize: 10,
+        total: 0,
+        showSizeChanger: true,
+        showQuickJumper: true,
+        showTotal: (total) => `共 ${total} 条`,
+        onChange: (page, pageSize) => {
+            let query = JSON.parse(JSON.stringify(listQuery))
+            listQuery.page = page
+            setListQuery(query)
+            fetchData(listQuery)
+        },
+        onShowSizeChange: (page, pageSize) => {
+            let query = JSON.parse(JSON.stringify(listQuery))
+            listQuery.pageSize = pageSize
+            setListQuery(query)
+            fetchData(listQuery)
+        },
+    })
+
+
+    const [listRoleQuery, setListRoleQuery] = useState({
+        total: 0,
+        page: 1,
+        limit: 10,
+    })
 
     const [uiList, setUiList] = useState([
         {
@@ -73,12 +99,12 @@ function UserAdmin() {
                 </span>
             ),
         },
-    ]);
+    ])
 
     const [queryKeys, setQueryKeys] = useState({
         name: '',
         username: '',
-    });
+    })
 
     const [queryRules, setQueryRules] = useState([
         {
@@ -95,59 +121,48 @@ function UserAdmin() {
             type: 'input',
             placeholder: '请输入账号',
         }
-    ]);
-
-    const [listQuery, setListQuery] = useState({
-        current: 1,
-        pageSize: 10, // 每页显示的条数
-        total: 0, // 数据总数
-    })
+    ])
 
 
-    const [listRoleQuery, setListRoleQuery] = useState({
-        total: 0,
-        page: 1,
-        limit: 10,
-    })
 
-    const fetchData = () => {
+
+
+    const fetchData = (listCVEQueryData) => {
         let data = queryKeys
-        data.page = listQuery.current
-        data.rows = listQuery.pageSize
+        data.page = listCVEQueryData.current
+        data.rows = listCVEQueryData.pageSize
         getUserList(data).then((res) => {
-            const result = res.data.data;
-            console.log("get data", result);
+            const result = res.data.data
+            console.log("get data", result)
             const pageData = {
                 total: res.data.total,
                 pageSize: res.data.page,
             }
-            setListData(result);
+            setListData(result.reverse())
+            setListQuery(pageData)
         })
-    };
+    }
 
     const getData = () => {
         let data = queryKeys
         data.page = listQuery.current
         data.rows = listQuery.pageSize
         getUserList(data).then((res) => {
-            const result = res.data.data;
-            console.log("get data", result);
+            const result = res.data.data
             const pageData = {
                 total: res.data.total,
-                pageSize: res.data.page,
+                pageSize: res.data.rows,
+                current: res.data.page
             }
-            setListData(result.reverse());
+            setListData(result)
+            setListQuery(pageData)
         })
     }
 
-    const [listData, setListData] = useState();
 
-    const countPlus = () => {
-        setCount(count + 1);
-    }
 
     useEffect(() => {
-        getData();
+        getData()
     }, [])
 
     return (
@@ -173,4 +188,4 @@ function UserAdmin() {
 
 }
 
-export default UserAdmin;
+export default UserAdmin
