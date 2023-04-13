@@ -1,68 +1,66 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import { useState } from 'react'
 import {
     Form, Input,
     Button,
     Radio,
     Select,
     DatePicker,
-} from 'antd';
+} from 'antd'
+const { RangePicker } = DatePicker
+const { Option } = Select
 
-const { RangePicker } = DatePicker;
-const onChange = (value, dateString) => {
-    console.log('Selected Time: ', value);
-    console.log('Formatted Selected Time: ', dateString);
-};
-const onOk = (value) => {
-    console.log('onOk: ', value);
-};
+function DynamicFilter (props) {
+    const [formData, setFormData] = useState()
 
-const { Option } = Select;
-class DynamicFilter extends Component {
-    constructor(props) {
-        super(props);
+    const onChange = (value, dateString) => {
+        console.log('Selected Time: ', value)
+        console.log('Formatted Selected Time: ', dateString)
     }
-    state = {
-
+    const onOk = (value) => {
+        console.log('onOk: ', value)
     }
 
-    getOptionList(data, name) {
+    const getOptionList = (data, name) => {
         if (!data) {
-            return [];
+            return []
         }
-        const options = [];
+        const options = []
         data.map(item => {
             options.push(
                 <Option value={item.value} key={item.value}>
                     {item.label}
                 </Option>
-            );
-        });
-        return options;
+            )
+        })
+        return options
     }
 
-    initFilterForm = () => {
-        const [ ...formList ] = this.props.formList;
-        const formItemList = [];
+    const initFilterForm = () => {
+        const [...formList] = props.formList
+        const formKeys = props.queryKeys
+        console.log('formKeys', formKeys['kind'])
+        const formItemList = []
         if (formList.length > 0) {
             formList.map((item) => {
                 if (item.type == 'input') {
                     const inputItem = (
-                        <Form.Item key={item.key} label={item.label} name={item.key} >
-                          <Input></Input>
-                        </Form.Item>
+                        <Form.Item key={item.key} label={item.label} name={item.key} value={formKeys[item.key]}>
+                            <Input></Input>
+                        </Form.Item >
                     )
-                    formItemList.push(inputItem);
+                    formItemList.push(inputItem)
                 } else if (item.type == 'select') {
                     const selectItem = (
                         <Form.Item key={item.key} label={item.label} name={item.key} >
                             <Select placeholder={item.placeholder} style={{ width: 160 }}>
                                 {
-                                    this.getOptionList(item.options)
+                                    getOptionList(item.options)
                                 }
                             </Select>
                         </Form.Item>
                     )
-                    formItemList.push(selectItem);
+                    formItemList.push(selectItem)
                 } else if (item.type == 'daterange') {
                     const datePicker = (
 
@@ -78,31 +76,27 @@ class DynamicFilter extends Component {
                         </Form.Item>
 
                     )
-                    formItemList.push(datePicker);
+                    formItemList.push(datePicker)
                 }
             })
         }
-        return formItemList;
+        return formItemList
     }
 
-    printPropsData = () => {
-        const queryKeys = this.props.queryKeys;
-        console.log(queryKeys);
+    const handleSubmit = (values) => {
+        props.search
     }
 
-    render() {
-        return (
-            <Form layout='inline'>
-                {
-                    this.initFilterForm()
-                }
-                <Form.Item>
-                    <Button type="primary" onClick={this.printPropsData} style={{ margin: '0 20px' }}>查询</Button>
-                    <Button type="primary" onClick={this.reset}>清空</Button>
-                </Form.Item>
-            </Form>
-        );
-    }
+    return (
+        <Form layout='inline'>
+            {
+                initFilterForm()
+            }
+            <Form.Item>
+                <Button type="primary" onClick={props.search} style={{ margin: '0 20px' }}>查询</Button>
+                <Button type="primary" onClick={props.resetFilter}>清空</Button>
+            </Form.Item>
+        </Form>
+    )
 }
-
-export default DynamicFilter;
+export default DynamicFilter

@@ -1,65 +1,65 @@
-import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
-import { Form, Icon, Input, Button, message, Spin } from "antd";
-import { connect } from "react-redux";
-import DocumentTitle from "react-document-title";
-import "./index.less";
-import { login, getUserInfo } from "@/store/actions";
+import React, { useState } from "react"
+import { Redirect } from "react-router-dom"
+import { Form, Icon, Input, Button, message, Spin } from "antd"
+import { connect } from "react-redux"
+import DocumentTitle from "react-document-title"
+import "./index.less"
+import { login, getUserInfo } from "@/store/actions"
 
 const Login = (props) => {
-  const { form, token, login, getUserInfo } = props;
-  const { getFieldDecorator } = form;
+  const { form, token, login, getUserInfo } = props
+  const { getFieldDecorator } = form
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const handleLogin = (username, password) => {
     // 登录完成后 发送请求 调用接口获取用户信息
-    setLoading(true);
+    setLoading(true)
     login(username, password)
       .then((data) => {
-        message.success("登录成功");
-        handleUserInfo(data.token);
+        message.success("登录成功")
+        handleUserInfo(data.token)
       })
       .catch((error) => {
-        setLoading(false);
-        message.error(error);
-      });
-  };
+        setLoading(false)
+        message.error(error)
+      })
+  }
 
   // 获取用户信息
   const handleUserInfo = (token) => {
     getUserInfo(token)
-      .then((data) => {})
+      .then((data) => { })
       .catch((error) => {
-        message.error(error);
-      });
-  };
+        message.error(error)
+      })
+  }
 
   const handleSubmit = (event) => {
     // 阻止事件的默认行为
-    event.preventDefault();
+    event.preventDefault()
 
     // 对所有表单字段进行检验
     form.validateFields((err, values) => {
       // 检验成功
       if (!err) {
-        const { username, password } = values;
-        handleLogin(username, password);
+        const { username, password } = values
+        handleLogin(username, password)
       } else {
-        console.log("检验失败!");
+        console.log("检验失败!")
       }
-    });
-  };
+    })
+  }
 
   if (token) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/dashboard" />
   }
   return (
     <DocumentTitle title={"用户登录"}>
       <div className="login-container">
         <Form onSubmit={handleSubmit} className="content">
           <div className="title">
-            <h2>软件成分分析系统</h2>
+            <h2>Software Content Analysis</h2>
           </div>
           <Spin spinning={loading} tip="登录中...">
             <Form.Item>
@@ -121,11 +121,11 @@ const Login = (props) => {
         </Form>
       </div>
     </DocumentTitle>
-  );
-};
+  )
+}
 
-const WrapLogin = Form.create()(Login);
+const WrapLogin = Form.create()(Login)
 
 export default connect((state) => state.user, { login, getUserInfo })(
   WrapLogin
-);
+)

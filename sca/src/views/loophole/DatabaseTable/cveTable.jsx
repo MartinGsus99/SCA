@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { Card, Divider, Modal, Button } from 'antd'
 
 function CVETable () {
-  const [queryKeys, setqueryKeys] = useState({
+  const [queryKeys, setQueryKeys] = useState({
     type: '0',
     cveId: '',
     kind: '0',
@@ -39,8 +39,8 @@ function CVETable () {
     {
       id: 1,
       label: 'CPE编号',
-      key: 'cpeId',
-      placeholder: 'CPE编号',
+      key: 'cveId',
+      placeholder: 'CVE编号',
       type: 'input',
     },
     {
@@ -155,6 +155,17 @@ function CVETable () {
   }
 
 
+  const search = (newData) => {
+    console.log("Search")
+    console.log(queryKeys)
+    setQueryKeys(newData)
+    console.log(queryKeys)
+  }
+
+  const resetFilter = () => {
+    console.log("Reset")
+  }
+
   useEffect(() => {
     getCVETableData()
   }, [])
@@ -164,7 +175,7 @@ function CVETable () {
       <Card>
         <DynamicFilter
           queryKeys={queryKeys}
-          formList={queryList}></DynamicFilter>
+          formList={queryList} search={search} resetFilter={resetFilter}></DynamicFilter>
       </Card>
       <Card>
         <DynamicTable
