@@ -1,14 +1,17 @@
-import React, { Component } from 'react';
-import DynamicTable from '@/components/DynamicTable';
-import Filter from '@/components/Filter';
-import { Card } from 'antd';
-import { getCPELoophole } from '@/api/knowledge';
+import React, { Component } from 'react'
+import DynamicTable from '@/components/DynamicTable'
+import Filter from '@/components/Filter'
+import { getCPELoophole } from '@/api/knowledge'
+import { Card, Modal, Input, Select, DatePicker } from 'antd'
+import moment from 'moment'
+const { RangePicker } = DatePicker
 
+const { Option } = Select
 
 
 class CWETable extends Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
     state = {
         queryKeys: {
@@ -29,36 +32,34 @@ class CWETable extends Component {
             {
                 id: 1,
                 label: 'CPE编号',
-                key: 'cpeId',
+                name: 'cpeId',
                 placeholder: 'CPE编号',
-                type: 'input',
+                component: <Input style={{ width: '180px' }} placeholder="请输入CPE编号" />,
             },
             {
                 id: 2,
                 label: '检索类型',
-                key: 'type',
+                name: 'type',
                 placeholder: '检索类型',
                 type: 'select',
-                options: [
-                    {
-                        label: '收录时间',
-                        value: '1',
-
-                    },
-                    {
-                        label: '更新时间',
-                        value: '0',
-
-                    },
-                ]
+                component: <Select style={{ width: '180px' }} placeholder="请选择检索类型" >
+                    <Option value="1">收录时间</Option>
+                    <Option value="0">更新时间</Option>
+                </Select>,
             },
 
             {
                 id: 3,
                 label: '时间范围',
-                key: 'timerange',
+                name: 'timerange',
                 placeholder: '请选择时间范围',
-                type: 'daterange',
+                component: <RangePicker
+                    ranges={{
+                        Today: [moment(), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    }}
+                    onChange={this.onChange}
+                />,
             }
         ],
 
@@ -89,13 +90,13 @@ class CWETable extends Component {
         ],
     }
 
-    getCPETableData() {
-        let data = this.state.queryKeys;
-        data.page = this.state.listCPEQuery.current;
-        data.rows = this.state.listCPEQuery.pageSize;
-        console.log(data);
+    getCPETableData () {
+        let data = this.state.queryKeys
+        data.page = this.state.listCPEQuery.current
+        data.rows = this.state.listCPEQuery.pageSize
+        console.log(data)
         getCPELoophole(data).then((res) => {
-            console.log(res.data);
+            console.log(res.data)
             const pageData = {
                 total: res.data.total,
                 pageSize: res.data.page,
@@ -106,24 +107,31 @@ class CWETable extends Component {
             })
         })
     }
-
-
-    componentDidMount() {
-        this.getCPETableData();
+    handleSearch = values => {
+        console.log(values)
+    }
+    onChange = (dates, dateStrings) => {
+        console.log('From: ', dates[0], ', to: ', dates[1])
+        console.log('From: ', dateStrings[0], ', to: ', dateStrings[1])
     }
 
-    render() {
+
+    componentDidMount () {
+        this.getCPETableData()
+    }
+
+    render () {
         return (
             <div>
                 <Card>
-                    <Filter formList={this.state.queryList} queryKeys={this.state.queryKeys}></Filter>
+                    <Filter formItems={this.state.queryList} onSearch={this.handleSearch}></Filter>
                 </Card>
                 <Card>
                     <DynamicTable uiList={this.state.cpeUIData} data={this.state.data} pageData={this.state.listCPEQuery} ></DynamicTable>
                 </Card>
             </div>
-        );
+        )
     }
 }
 
-export default CWETable;
+export default CWETable

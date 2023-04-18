@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import DynamicFilter from '@/components/Filter'
-import { Card, Divider, Modal, Button } from 'antd'
+import { Card, Divider, Modal, Input } from 'antd'
 import DynamicTable from '@/components/DynamicTable'
 
 import {
@@ -34,7 +34,11 @@ function UserAdmin () {
     }
 
     const [listData, setListData] = useState([])
-
+    const [pageData, setPageData] = useState({
+        current: 1,
+        pageSize: 10,
+        total: 0
+    })
     const [listQuery, setListQuery] = useState({
         page: 1,
         pageSize: 10,
@@ -109,28 +113,23 @@ function UserAdmin () {
     const [queryRules, setQueryRules] = useState([
         {
             id: '1',
-            key: 'name',
+            name: 'name',
             label: '用户名：',
-            type: 'input',
-            placeholder: '请输入用户名',
+            component: <Input style={{ width: '180px' }} placeholder="请输入用户名" />,
         },
         {
             id: '2',
-            key: 'username',
+            name: 'username',
             label: '账号：',
-            type: 'input',
-            placeholder: '请输入账号',
+            component: <Input style={{ width: '180px' }} placeholder="请输入账号" />,
         }
     ])
 
-
-
-
-
-    const fetchData = (listCVEQueryData) => {
+    const fetchData = () => {
         let data = queryKeys
-        data.page = listCVEQueryData.current
-        data.rows = listCVEQueryData.pageSize
+        data.page = pageData.current
+        data.rows = pageData.pageSize
+        console.log('data', data)
         getUserList(data).then((res) => {
             const result = res.data.data
             console.log("get data", result)
@@ -145,8 +144,8 @@ function UserAdmin () {
 
     const getData = () => {
         let data = queryKeys
-        data.page = listQuery.current
-        data.rows = listQuery.pageSize
+        data.page = pageData.current
+        data.rows = pageData.pageSize
         getUserList(data).then((res) => {
             const result = res.data.data
             const pageData = {
@@ -159,6 +158,9 @@ function UserAdmin () {
         })
     }
 
+    const handleSearch = values => {
+        console.log(values)
+    }
 
 
     useEffect(() => {
@@ -167,7 +169,9 @@ function UserAdmin () {
 
     return (
         <div>
-            <Card><DynamicFilter queryKeys={queryKeys} formList={queryRules}></DynamicFilter></Card>
+            <Card>
+                <DynamicFilter formItems={queryRules} onSearch={handleSearch}></DynamicFilter>
+            </Card>
             <Card>
                 <DynamicTable uiList={uiList} data={listData} pageData={listQuery} ></DynamicTable>
             </Card>

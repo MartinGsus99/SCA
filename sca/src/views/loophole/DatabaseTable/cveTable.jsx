@@ -3,8 +3,11 @@ import DynamicTable from '@/components/DynamicTable'
 import DynamicFilter from '@/components/Filter'
 import { getCVELoophole } from '@/api/knowledge'
 import { useState } from 'react'
-import { Card, Divider, Modal, Button } from 'antd'
+import { Card, Modal, Input, Select, DatePicker } from 'antd'
+import moment from 'moment'
+const { RangePicker } = DatePicker
 
+const { Option } = Select
 function CVETable () {
   const [queryKeys, setQueryKeys] = useState({
     type: '0',
@@ -35,40 +38,50 @@ function CVETable () {
     },
   })
 
+
+  const onChange = (dates, dateStrings) => {
+    console.log('From: ', dates[0], ', to: ', dates[1])
+    console.log('From: ', dateStrings[0], ', to: ', dateStrings[1])
+  }
+
+
   const [queryList, setQueryList] = useState([
     {
       id: 1,
-      label: 'CPE编号',
-      key: 'cveId',
+      label: 'CVE编号',
+      name: 'cveId',
       placeholder: 'CVE编号',
-      type: 'input',
+      component: <Input style={{ width: '180px' }} placeholder="请输入CVE编号" />,
     },
     {
       id: 2,
       label: '检索类型',
-      key: 'type',
+      name: 'type',
       placeholder: '检索类型',
-      type: 'select',
-      options: [
-        {
-          label: '收录时间',
-          value: '1',
-        },
-        {
-          label: '更新时间',
-          value: '0',
-        },
-      ],
+      component: <Select style={{ width: '180px' }} placeholder="请选择检索类型" >
+        <Option value="1">收录时间</Option>
+        <Option value="0">更新时间</Option>
+      </Select>,
     },
 
     {
       id: 3,
       label: '时间范围',
-      key: 'timerange',
+      name: 'timerange',
       placeholder: '请选择时间范围',
-      type: 'daterange',
+      component: <RangePicker
+        ranges={{
+          Today: [moment(), moment()],
+          'This Month': [moment().startOf('month'), moment().endOf('month')],
+        }}
+        onChange={onChange}
+      />,
     },
   ])
+
+  const handleSearch = values => {
+    console.log(values)
+  }
 
   const [uiList, setuilist] = useState([
     {
@@ -115,7 +128,6 @@ function CVETable () {
     let data = queryKeys
     data.page = listCVEQuery.page
     data.rows = listCVEQuery.pageSize
-    console.log(data)
     getCVELoophole(data).then((res) => {
       const result = res.data.data
       const pageData = {
@@ -154,18 +166,6 @@ function CVETable () {
     setModalFlag(false)
   }
 
-
-  const search = (newData) => {
-    console.log("Search")
-    console.log(queryKeys)
-    setQueryKeys(newData)
-    console.log(queryKeys)
-  }
-
-  const resetFilter = () => {
-    console.log("Reset")
-  }
-
   useEffect(() => {
     getCVETableData()
   }, [])
@@ -173,9 +173,7 @@ function CVETable () {
   return (
     <div>
       <Card>
-        <DynamicFilter
-          queryKeys={queryKeys}
-          formList={queryList} search={search} resetFilter={resetFilter}></DynamicFilter>
+        <DynamicFilter formItems={queryList} onSearch={handleSearch}></DynamicFilter>
       </Card>
       <Card>
         <DynamicTable

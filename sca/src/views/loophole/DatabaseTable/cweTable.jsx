@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import DynamicTable from '@/components/DynamicTable';
-import Filter from '@/components/Filter';
-import { Card } from 'antd';
-import { getCWELoophole } from '@/api/knowledge';
+import React, { Component } from 'react'
+import DynamicTable from '@/components/DynamicTable'
+import Filter from '@/components/Filter'
+import { Card, Input } from 'antd'
+import { getCWELoophole } from '@/api/knowledge'
 
 
 class CWETable extends Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
     state = {
         queryKeys: {
@@ -25,9 +25,8 @@ class CWETable extends Component {
             {
                 id: 1,
                 label: 'CWE名称',
-                key: 'cweId',
-                placeholder: 'CWE名称',
-                type: 'input',
+                name: 'cweName',
+                component: <Input style={{ width: '180px' }} placeholder="请输入CWE名称" />,
             },
         ],
 
@@ -37,29 +36,31 @@ class CWETable extends Component {
                 dataIndex: 'id',
             },
             {
-                title: 'CWE名称',
-                dataIndex: 'name',
-            }, {
                 title: 'CWE编号',
                 dataIndex: 'cweId',
                 render: (row) => {
-                    return 'CWE-' + row;
+                    return 'CWE-' + row
                 }
             },
+            {
+                title: 'CWE名称',
+                dataIndex: 'name',
+            },
+
             {
                 title: '描述',
                 dataIndex: 'description',
                 render: (row) => {
                     if (row.length >= 50) {
-                        return row.slice(0, 50) + '......';
+                        return row.slice(0, 50) + '......'
                     }
                 }
             },
         ],
     }
 
-    getCWETableData() {
-        let data = this.state.queryKeys;
+    getCWETableData () {
+        let data = this.state.queryKeys
         data.page = this.state.listCWEQuery.current
         data.rows = this.state.listCWEQuery.pageSize
         getCWELoophole(data).then((res) => {
@@ -76,23 +77,42 @@ class CWETable extends Component {
     }
 
 
-
-    componentDidMount() {
-        this.getCWETableData();
+    handleSearch = values => {
+        console.log(values)
+        let data = {}
+        data.page = this.state.listCWEQuery.current
+        data.rows = this.state.listCWEQuery.pageSize
+        data.cweName = values.cweName
+        getCWELoophole(data).then((res) => {
+            const pageData = {
+                total: res.data.total,
+                pageSize: res.data.rows,
+                current: res.data.page
+            }
+            this.setState({
+                data: res.data.data,
+                listCWEQuery: pageData,
+            })
+        })
     }
 
-    render() {
+
+    componentDidMount () {
+        this.getCWETableData()
+    }
+
+    render () {
         return (
             <div>
                 <Card>
-                    <Filter formList={this.state.queryList} queryKeys={this.state.queryKeys}></Filter>
+                    <Filter formItems={this.state.queryList} onSearch={this.handleSearch}></Filter>
                 </Card>
                 <Card>
                     <DynamicTable uiList={this.state.cweUIData} data={this.state.data} pageData={this.state.listCWEQuery}></DynamicTable>
                 </Card>
             </div>
-        );
+        )
     }
 }
 
-export default CWETable;
+export default CWETable
