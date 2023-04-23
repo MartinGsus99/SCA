@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import DynamicTable from '@/components/DynamicTable'
 import DynamicFilter from '@/components/Filter'
+import KnowledgeMap from '@/components/KnowledgeMap'
 import { getCVELoophole } from '@/api/knowledge'
 import { useState } from 'react'
 import { Card, Modal, Input, Select, DatePicker, message } from 'antd'
@@ -191,9 +192,11 @@ function CVETable () {
     })
   }
 
-
-
   const [modalFlag, setModalFlag] = useState(false)
+  const modalStyle = {
+    width: '1200px',
+    height: '800px',
+  }
 
   const showModal = () => {
     setModalFlag(true)
@@ -220,19 +223,18 @@ function CVETable () {
           pageData={listCVEQuery}></DynamicTable>
       </Card>
 
-      <Modal
+      <Modal width={1200}
+        bodyStyle={modalStyle}
         title="Modal"
-        visible={modalFlag}
+        visible={true}
         onOk={hideModal}
         onCancel={hideModal}
         okText="确认"
         cancelText="取消"
       >
-        <Card>
-          知识图谱
-        </Card>
+        <KnowledgeMap ></KnowledgeMap>
       </Modal>
-    </div>
+    </div >
   )
 }
 
