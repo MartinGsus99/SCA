@@ -2,7 +2,7 @@ import React, { Component, useState, useEffect } from 'react'
 import DynamicTable from '@/components/DynamicTable'
 import DynamicFilter from '@/components/Filter'
 import { getCPELoophole } from '@/api/knowledge'
-import { Card, Input, Select, DatePicker } from 'antd'
+import { Card, Input, Select, DatePicker, message } from 'antd'
 import moment from 'moment'
 const { RangePicker } = DatePicker
 
@@ -10,7 +10,6 @@ const { Option } = Select
 
 function CWETable () {
     const [queryKeys, setQueryKeys] = useState({
-        type: '1',
         kind: '0',
         cpeId: '',
         start_date: '',
@@ -113,20 +112,27 @@ function CWETable () {
         }
     ])
 
+    const [isLoading, setLodingFlag] = useState(false)
+
     const getCPETableData = () => {
         let data = queryKeys
         data.page = listCPEQuery.current
         data.rows = listCPEQuery.pageSize
         console.log(data)
         getCPELoophole(data).then((res) => {
-            const result = res.data.data
-            const pageData = {
-                total: res.data.total,
-                pageSize: res.data.rows,
-                current: res.data.page,
+            if (res.data.success) {
+                message.success("查询成功！")
+                const result = res.data.data
+                const pageData = {
+                    total: res.data.total,
+                    pageSize: res.data.rows,
+                    current: res.data.page,
+                }
+                setData(result.reverse())
+                setListCPEQuery(pageData)
+            } else {
+                message.error(res.data)
             }
-            setData(result.reverse())
-            setListCPEQuery(pageData)
         })
     }
 
@@ -137,14 +143,21 @@ function CWETable () {
         data.rows = listCPEQueryData.pageSize
         console.log('data', data)
         getCPELoophole(data).then((res) => {
-            const result = res.data.data
-            const pageData = {
-                total: res.data.total,
-                pageSize: res.data.rows,
-                current: res.data.page,
+            if (res.data.success) {
+                setLodingFlag(false)
+                message.success("查询成功！")
+                const result = res.data.data
+                const pageData = {
+                    total: res.data.total,
+                    pageSize: res.data.rows,
+                    current: res.data.page,
+                }
+                setData(result.reverse())
+                setListCPEQuery(pageData)
+            } else {
+                setLodingFlag(false)
+                message.error(res.data)
             }
-            setData(result.reverse())
-            setListCPEQuery(pageData)
         })
     }
 
@@ -159,14 +172,21 @@ function CWETable () {
         data.end_date = ''
         console.log(data)
         getCPELoophole(data).then((res) => {
-            const result = res.data.data
-            const pageData = {
-                total: res.data.total,
-                pageSize: res.data.rows,
-                current: res.data.page,
+            if (res.data.success) {
+                setLodingFlag(false)
+                message.success("查询成功！")
+                const result = res.data.data
+                const pageData = {
+                    total: res.data.total,
+                    pageSize: res.data.rows,
+                    current: res.data.page,
+                }
+                setData(result.reverse())
+                setListCPEQuery(pageData)
+            } else {
+                setLodingFlag(false)
+                message.error(res.data)
             }
-            setData(result.reverse())
-            setListCPEQuery(pageData)
         })
     }
 
@@ -182,6 +202,7 @@ function CWETable () {
             </Card>
             <Card>
                 <DynamicTable
+                    isLoading={isLoading}
                     uiList={uiList}
                     data={data}
                     pageData={listCPEQuery}></DynamicTable>

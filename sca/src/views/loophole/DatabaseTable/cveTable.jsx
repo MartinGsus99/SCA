@@ -3,7 +3,7 @@ import DynamicTable from '@/components/DynamicTable'
 import DynamicFilter from '@/components/Filter'
 import { getCVELoophole } from '@/api/knowledge'
 import { useState } from 'react'
-import { Card, Modal, Input, Select, DatePicker } from 'antd'
+import { Card, Modal, Input, Select, DatePicker, message } from 'antd'
 import moment from 'moment'
 const { RangePicker } = DatePicker
 
@@ -79,10 +79,6 @@ function CVETable () {
     },
   ])
 
-  const handleSearch = values => {
-    console.log(values)
-  }
-
   const [uiList, setuilist] = useState([
     {
       dataIndex: 'cveId',
@@ -123,20 +119,28 @@ function CVETable () {
     },
   ])
 
+  const [isLoading, setLodingFlag] = useState(false)
   const [cveData, setCveData] = useState([])
   const getCVETableData = () => {
     let data = queryKeys
     data.page = listCVEQuery.page
     data.rows = listCVEQuery.pageSize
     getCVELoophole(data).then((res) => {
-      const result = res.data.data
-      const pageData = {
-        total: res.data.total,
-        pageSize: res.data.rows,
-        current: res.data.page,
+      if (res.data.success) {
+        setLodingFlag(false)
+        message.success("查询成功！")
+        const result = res.data.data
+        const pageData = {
+          total: res.data.total,
+          pageSize: res.data.rows,
+          current: res.data.page,
+        }
+        setCveData(result)
+        setListCVEQuery(pageData)
+      } else {
+        setLodingFlag(false)
+        message.error(res.data)
       }
-      setCveData(result.reverse())
-      setListCVEQuery(pageData)
     })
   }
 
@@ -145,16 +149,49 @@ function CVETable () {
     data.page = listCVEQueryData.page
     data.rows = listCVEQueryData.pageSize
     getCVELoophole(data).then((res) => {
-      const result = res.data.data
-      const pageData = {
-        total: res.data.total,
-        pageSize: res.data.rows,
-        current: res.data.page,
+      if (res.data.success) {
+        setLodingFlag(false)
+        message.success("查询成功！")
+        const result = res.data.data
+        const pageData = {
+          total: res.data.total,
+          pageSize: res.data.rows,
+          current: res.data.page,
+        }
+        setCveData(result)
+        setListCVEQuery(pageData)
+      } else {
+        setLodingFlag(false)
+        message.error(res.data)
       }
-      setCveData(result.reverse())
-      setListCVEQuery(pageData)
     })
   }
+
+  const handleSearch = values => {
+    let data = queryKeys
+    data.cweName = values.cweName
+    data.page = listCVEQuery.current
+    data.rows = listCVEQuery.pageSize
+    data.type = values.type
+    data.cveId = values.cveId
+    getCVELoophole(data).then((res) => {
+      if (res.data.success) {
+        message.success("查询成功！")
+        const result = res.data.data
+        const pageData = {
+          total: res.data.total,
+          pageSize: res.data.rows,
+          current: res.data.page,
+        }
+        setCveData(result)
+        setListCVEQuery(pageData)
+      } else {
+        message.error(res.data)
+      }
+    })
+  }
+
+
 
   const [modalFlag, setModalFlag] = useState(false)
 
@@ -177,6 +214,7 @@ function CVETable () {
       </Card>
       <Card>
         <DynamicTable
+          isLoading={isLoading}
           uiList={uiList}
           data={cveData}
           pageData={listCVEQuery}></DynamicTable>

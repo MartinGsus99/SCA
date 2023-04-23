@@ -81,7 +81,7 @@ function CWETable () {
         },
 
     ])
-
+    const [isLoading, setLodingFlag] = useState(false)
     const [cweData, setCweData] = useState([])
     const getCWETableData = () => {
         let data = queryKeys
@@ -90,6 +90,7 @@ function CWETable () {
 
         getCWELoophole(data).then((res) => {
             if (res.data.success) {
+                setLodingFlag(false)
                 message.success("获取数据成功！")
                 const result = res.data.data
                 const pageData = {
@@ -100,6 +101,7 @@ function CWETable () {
                 setCweData(result)
                 setListCWEQuery(pageData)
             } else {
+                setLodingFlag(false)
                 message.error(res.data)
             }
         })
@@ -161,6 +163,7 @@ function CWETable () {
             </Card>
             <Card>
                 <DynamicTable
+                    isLoading={isLoading}
                     uiList={uiList}
                     data={cweData}
                     pageData={listCWEQuery}></DynamicTable>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import DynamicFilter from '@/components/Filter'
-import { Card, DatePicker, Input, Select } from 'antd'
+import { Card, DatePicker, Input, Select, message } from 'antd'
 import DynamicTable from '@/components/DynamicTable'
 import { getTaskReportList } from "../../../api/report"
 import moment from 'moment'
@@ -124,9 +124,11 @@ function History () {
     },
   })
 
+  const [isLoading, setLodingFlag] = useState(false)
   const [listData, setListData] = useState([])
 
   const fetchData = () => {
+    setLodingFlag(true)
     let data = {}
     data.page = pageData.current
     data.rows = pageData.pageSize
@@ -137,14 +139,21 @@ function History () {
     data.end_date = ''
     console.log('data', data)
     getTaskReportList(data).then((res) => {
-      const result = res.data.data
-      const pageData = {
-        total: res.data.total,
-        pageSize: res.data.rows,
-        current: res.data.page,
+      if (res.data.success) {
+        setLodingFlag(false)
+        message.success("获取成功！")
+        const result = res.data.data
+        const pageData = {
+          total: res.data.total,
+          pageSize: res.data.rows,
+          current: res.data.page,
+        }
+        setListData(result)
+        setPagedata(pageData)
+      } else {
+        setLodingFlag(false)
+        message.error(res.data)
       }
-      setListData(result)
-      setPagedata(pageData)
     })
   }
 
@@ -161,14 +170,19 @@ function History () {
     data.end_date = ''
     console.log('data', data)
     getTaskReportList(data).then((res) => {
-      const result = res.data.data
-      const pageData = {
-        total: res.data.total,
-        pageSize: res.data.rows,
-        current: res.data.page,
+      if (res.data.success) {
+        message.success("获取成功！")
+        const result = res.data.data
+        const pageData = {
+          total: res.data.total,
+          pageSize: res.data.rows,
+          current: res.data.page,
+        }
+        setListData(result)
+        setPagedata(pageData)
+      } else {
+        message.error(res.data)
       }
-      setListData(result)
-      setPagedata(pageData)
     })
   }
 
@@ -182,7 +196,7 @@ function History () {
         <DynamicFilter formItems={queryList} onSearch={handleSearch}></DynamicFilter>
       </Card>
       <Card>
-        <DynamicTable uiList={uiList} data={listData} pageData={pageData}></DynamicTable>
+        <DynamicTable isLoading={isLoading} uiList={uiList} data={listData} pageData={pageData}></DynamicTable>
       </Card>
     </div>
   )
