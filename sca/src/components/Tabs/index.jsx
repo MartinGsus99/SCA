@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
-import { Tabs, Card } from 'antd';
+import React, { Component } from 'react'
+import { Tabs, Card } from 'antd'
 
 class DynamicTabs extends Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
     state = {
 
     }
 
     onChange = (key) => {
-        console.log(key);
+        console.log(key)
     };
 
-    render() {
+    render () {
         return (
             <Card>
-                <Tabs defaultActiveKey={'1'} items={this.props.items} onChange={this.onChange} >
+                <Tabs defaultActiveKey={'3'} items={this.props.items} onChange={this.onChange} >
                     {
                         this.props.items.map((item) => {
                             return (
@@ -27,9 +27,9 @@ class DynamicTabs extends Component {
                     }
                 </Tabs>
             </Card>
-        );
+        )
     }
     0
 }
 
-export default DynamicTabs;
+export default DynamicTabs
