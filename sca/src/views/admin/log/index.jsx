@@ -1,73 +1,83 @@
-import React, { Component } from 'react';
-import DynamicFilter from '@/components/Filter';
-import { Card } from 'antd';
-import DynamicTable from '@/components/DynamicTable';
-
+import React, { Component, useState } from 'react'
+import DynamicFilter from '@/components/Filter'
+import { Card, DatePicker } from 'antd'
+import DynamicTable from '@/components/DynamicTable'
+import moment from 'moment'
 import {
     getLogData
-} from '../../../api/log';
+} from '../../../api/log'
+const { RangePicker } = DatePicker
 
-class Log extends Component {
-    state = { 
-          queryKeys: {
-            dateRange: '',
+function Log (props) {
+    const [queryKeys] = useState({
+        dateRange: '',
+    })
+
+
+    const onChange = (dates, dateStrings) => {
+        console.log('From: ', dates[0], ', to: ', dates[1])
+        console.log('From: ', dateStrings[0], ', to: ', dateStrings[1])
+    }
+    const queryRules = [{
+        id: '1',
+        name: 'dateRange',
+        label: '日期范围',
+        placeholder: '请选择时间范围',
+        component: <RangePicker
+            ranges={{
+                Today: [moment(), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+            }}
+            onChange={onChange}
+        />,
+    }]
+
+
+
+    const [listQuery, setListQuery] = useState({
+        current: 1,
+        pageSize: 10, // 每页显示的条数
+        total: 0, // 数据总数
+    })
+
+    const uiList = [
+        {
+            title: '序号',
+            dataIndex: 'id',
+            key: 'id'
         },
-        queryRules: [{
-            id: '1',
-            key: 'dateRange',
-            label: '日期范围',
-            type: 'daterange',
-            placeholder: '请输入角色名',
+        {
+            title: 'IP',
+            dataIndex: 'requestAddr',
+            key: 'requestAddr'
         },
-       ],
 
-        listQuery: {
-            current: 1,
-            pageSize: 10, // 每页显示的条数
-            total: 0, // 数据总数
+        {
+            title: '时间',
+            dataIndex: 'gmtCreate',
+            key: 'gmtCreate',
         },
-    
-        uiList: [
-            {
-                title: '序号',
-                dataIndex: 'id',
-                key: 'id'
-            },
-            {
-                title: 'IP',
-                dataIndex: 'requestAddr',
-                key: 'requestAddr'
-            },
+        {
+            title: '模块',
+            dataIndex: 'modelName',
+            key: 'modelName'
+        },
+        {
+            title: 'URL',
+            dataIndex: 'requestUrl',
+            key: 'requestUrl'
+        },
 
-            {
-                title: '时间',
-                dataIndex: 'gmtCreate',
-                key: 'gmtCreate',
-            },
-            {
-                title: '模块',
-                dataIndex: 'modelName',
-                key: 'modelName'
-            },
-            {
-                title: 'URL',
-                dataIndex: 'requestUrl',
-                key: 'requestUrl'
-            },
-            
-        ],
-        listData:[],
-        pageData:[],
-     } 
+    ]
+    const [listData, setListData] = useState([])
 
-
-     fetchData() {
+    const fetchData = () => {
         console.log("get data")
         let data = this.state.queryKeys
         data.page = this.state.listQuery.current
         data.rows = this.state.listQuery.pageSize
         getLogData(data).then((res) => {
-            const result = res.data.data;
+            const result = res.data.data
             console.log('res', result)
             const pageData = {
                 total: res.data.total,
@@ -77,28 +87,20 @@ class Log extends Component {
                 listData: result,
                 listQuery: pageData,
             })
-            console.log('state', this.state.listData);
         })
     }
 
-    componentWillMount() {
-        this.fetchData();
+    const handleSearch = values => {
+        console.log(values)
     }
-
-    componentDidMount() {
-        this.fetchData();
-    }
-
-    render() { 
-        return (
-           <div>
-                <Card><DynamicFilter formList={this.state.queryRules} queryKeys={this.state.queryKeys} searchInfor={this.printData}></DynamicFilter></Card>
-                <Card>
-                    <DynamicTable uiList={this.state.uiList} data={this.state.listData} pageData={this.state.listQuery} pagination={this.pagination}></DynamicTable>
-                </Card>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <Card><DynamicFilter formItems={queryRules} onSearch={handleSearch}></DynamicFilter></Card>
+            <Card>
+                <DynamicTable uiList={uiList} data={listData} pageData={listQuery} pagination={listQuery}></DynamicTable>
+            </Card>
+        </div>
+    )
 }
- 
-export default Log;
+
+export default Log

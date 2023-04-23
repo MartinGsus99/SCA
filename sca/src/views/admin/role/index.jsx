@@ -1,14 +1,16 @@
-import React, { Component } from 'react';
-import DynamicFilter from '@/components/Filter';
-import { Card } from 'antd';
-import DynamicTable from '@/components/DynamicTable';
+import React, { Component } from 'react'
+import DynamicFilter from '@/components/Filter'
+import { Card, Input, Select } from 'antd'
+import DynamicTable from '@/components/DynamicTable'
 
 import {
     roleList, addUserRole
-} from '../../../api/role';
+} from '../../../api/role'
+
+const { Option } = Select
 class RoleAdmin extends Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
     state = {
         queryKeys: {
@@ -17,28 +19,19 @@ class RoleAdmin extends Component {
         },
         queryRules: [{
             id: '1',
-            key: 'name',
+            name: 'name',
             label: '角色名',
-            type: 'input',
-            placeholder: '请输入角色名',
+            component: <Input style={{ width: '180px' }} placeholder="请输入角色名称" />,
         },
         {
             id: '2',
-            key: 'admin',
+            name: 'admin',
             label: '是否为管理员',
-            type: 'select',
-            placeholder: '请选择',
-            options: [
-                {
-                    label: '是',
-                    value: '1',
+            component: <Select style={{ width: '180px' }} placeholder="请选择" >
+                <Option value="1">是</Option>
+                <Option value="0">否</Option>
+            </Select>,
 
-                }, {
-                    label: '否',
-                    value: '0',
-
-                }
-            ]
         },],
 
         listQuery: {
@@ -70,31 +63,31 @@ class RoleAdmin extends Component {
                 key: 'isAdmin',
                 render: (row) => {
                     if (row == 1) {
-                      return "是";
+                        return "是"
                     } else {
-                      return "否";
+                        return "否"
                     }
-                  },
+                },
             },
             {
                 title: '备注',
                 dataIndex: 'remark',
                 key: 'remark'
             },
-            
-            
+
+
         ],
-        listData:[],
-        pageData:[],
+        listData: [],
+        pageData: [],
     }
 
-    fetchData() {
+    fetchData () {
         console.log("get data")
         let data = this.state.queryKeys
         data.page = this.state.listQuery.current
         data.rows = this.state.listQuery.pageSize
         roleList(data).then((res) => {
-            const result = res.data.data;
+            const result = res.data.data
             console.log('res', result)
             const pageData = {
                 total: res.data.total,
@@ -104,28 +97,31 @@ class RoleAdmin extends Component {
                 listData: result,
                 listQuery: pageData,
             })
-            console.log('state', this.state.listData);
+            console.log('state', this.state.listData)
         })
     }
 
-    componentWillMount() {
-        this.fetchData();
+    handleSearch = values => {
+        console.log(values)
+    }
+    componentWillMount () {
+        this.fetchData()
     }
 
-    componentDidMount() {
-        this.fetchData();
+    componentDidMount () {
+        this.fetchData()
     }
 
-    render() {
+    render () {
         return (
             <div>
-                <Card><DynamicFilter formList={this.state.queryRules} queryKeys={this.state.queryKeys} searchInfor={this.printData}></DynamicFilter></Card>
+                <Card><DynamicFilter formItems={this.state.queryRules} onSearch={this.handleSearch}></DynamicFilter></Card>
                 <Card>
                     <DynamicTable uiList={this.state.uiList} data={this.state.listData} pageData={this.state.listQuery} pagination={this.pagination}></DynamicTable>
                 </Card>
             </div>
-        );
+        )
     }
 }
 
-export default RoleAdmin;
+export default RoleAdmin

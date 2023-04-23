@@ -3,6 +3,7 @@ import { Form, Button, Row, Col, Input } from 'antd'
 
 const DynamicFilter = Form.create({ name: 'query_form' })(
   ({ form, formItems, onSearch }) => {
+    // console.log(formItems)
     const handleSearch = e => {
       e.preventDefault()
       form.validateFields((err, values) => {
