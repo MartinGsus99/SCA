@@ -80,6 +80,8 @@ function CVETable () {
     },
   ])
 
+  const [mapData, setMapData] = useState([])
+
   const [uiList, setuilist] = useState([
     {
       dataIndex: 'cveId',
@@ -114,7 +116,13 @@ function CVETable () {
       align: 'center',
       render: (text, record) => (
         <span>
-          <a onClick={showModal}>查看知识图谱</a>
+          <a onClick={
+            e => {
+              e.stopPropagation()
+              showModal(record)
+
+            }
+          }>查看知识图谱</a>
         </span>
       ),
     },
@@ -198,7 +206,9 @@ function CVETable () {
     height: '800px',
   }
 
-  const showModal = () => {
+
+  const showModal = (record) => {
+    console.log(record)
     setModalFlag(true)
   }
 
@@ -226,13 +236,13 @@ function CVETable () {
       <Modal width={1200}
         bodyStyle={modalStyle}
         title="Modal"
-        visible={true}
+        visible={modalFlag}
         onOk={hideModal}
         onCancel={hideModal}
         okText="确认"
         cancelText="取消"
       >
-        <KnowledgeMap ></KnowledgeMap>
+        <KnowledgeMap mapData={mapData}></KnowledgeMap>
       </Modal>
     </div >
   )
