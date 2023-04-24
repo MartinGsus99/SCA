@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import DynamicFilter from '@/components/Filter'
 import { Card, DatePicker } from 'antd'
 import DynamicTable from '@/components/DynamicTable'
@@ -70,34 +70,42 @@ function Log (props) {
 
     ]
     const [listData, setListData] = useState([])
+    const [isLoading, setLoadingFlag] = useState(false)
 
     const fetchData = () => {
         console.log("get data")
-        let data = this.state.queryKeys
-        data.page = this.state.listQuery.current
-        data.rows = this.state.listQuery.pageSize
+        let data = queryKeys
+        data.page = listQuery.current
+        data.rows = listQuery.pageSize
+        setLoadingFlag(true)
         getLogData(data).then((res) => {
-            const result = res.data.data
-            console.log('res', result)
-            const pageData = {
-                total: res.data.total,
-                pageSize: res.data.page,
+            if (res.data.success) {
+                setLoadingFlag(false)
+                const result = res.data.data
+                console.log("get data", result)
+                const pageData = {
+                    total: res.data.total,
+                    pageSize: res.data.page,
+                }
+                setListData(result.reverse())
+                setListQuery(pageData)
             }
-            this.setState({
-                listData: result,
-                listQuery: pageData,
-            })
         })
     }
 
     const handleSearch = values => {
         console.log(values)
     }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
     return (
         <div>
             <Card><DynamicFilter formItems={queryRules} onSearch={handleSearch}></DynamicFilter></Card>
             <Card>
-                <DynamicTable uiList={uiList} data={listData} pageData={listQuery} pagination={listQuery}></DynamicTable>
+                <DynamicTable isLoading={isLoading} uiList={uiList} data={listData} pageData={listQuery} pagination={listQuery}></DynamicTable>
             </Card>
         </div>
     )

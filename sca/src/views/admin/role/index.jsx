@@ -79,6 +79,7 @@ class RoleAdmin extends Component {
         ],
         listData: [],
         pageData: [],
+        isLoading: false,
     }
 
     fetchData () {
@@ -86,18 +87,24 @@ class RoleAdmin extends Component {
         let data = this.state.queryKeys
         data.page = this.state.listQuery.current
         data.rows = this.state.listQuery.pageSize
+        this.setState({
+            isLoading: true
+        })
         roleList(data).then((res) => {
-            const result = res.data.data
-            console.log('res', result)
-            const pageData = {
-                total: res.data.total,
-                pageSize: res.data.page,
+            if (res.data.success) {
+                const result = res.data.data
+                console.log('res', result)
+                const pageData = {
+                    total: res.data.total,
+                    pageSize: res.data.page,
+                }
+                this.setState({
+                    isLoading: false,
+                    listData: result,
+                    listQuery: pageData,
+                })
+                console.log('state', this.state.listData)
             }
-            this.setState({
-                listData: result,
-                listQuery: pageData,
-            })
-            console.log('state', this.state.listData)
         })
     }
 
@@ -117,7 +124,7 @@ class RoleAdmin extends Component {
             <div>
                 <Card><DynamicFilter formItems={this.state.queryRules} onSearch={this.handleSearch}></DynamicFilter></Card>
                 <Card>
-                    <DynamicTable uiList={this.state.uiList} data={this.state.listData} pageData={this.state.listQuery} pagination={this.pagination}></DynamicTable>
+                    <DynamicTable isLoading={this.state.isLoading} uiList={this.state.uiList} data={this.state.listData} pageData={this.state.listQuery} pagination={this.pagination}></DynamicTable>
                 </Card>
             </div>
         )
