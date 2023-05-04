@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import DynamicTable from '@/components/DynamicTable'
 import DynamicFilter from '@/components/Filter'
 import KnowledgeMap from '@/components/KnowledgeMap'
-import { getCVELoophole } from '@/api/knowledge'
+import { getCVELoophole, getCveInfor } from '@/api/knowledge'
 import { useState } from 'react'
 import { Card, Modal, Input, Select, DatePicker, message } from 'antd'
 import moment from 'moment'
@@ -80,7 +80,7 @@ function CVETable () {
     },
   ])
 
-  const [mapData, setMapData] = useState([])
+
 
   const [uiList, setuilist] = useState([
     {
@@ -200,16 +200,164 @@ function CVETable () {
     })
   }
 
+  let initData = {
+    nodes: [],
+    edges: []
+  }
+  const [mapData, setMapData] = useState({})
+
+  const createCveNode = (cveid, cvedescription) => {
+    //生成cveid结点，push进入nodes数组
+    let newCveIdNode = {
+      id: "cveID",
+      size: 150,
+
+      style: {
+        fill: "#7286D3",
+      },
+      label: "",
+      labelCfg: {
+        style: {
+          fill: "#fff",
+        },
+      },
+      describtion: "",
+    }
+
+    newCveIdNode.label = cveid
+    newCveIdNode.describtion = cvedescription
+    initData.nodes.push(newCveIdNode)
+  }
+
+  const createCWENode = (cweIds) => {
+    let amount = cweIds.length
+
+    for (let i = 0; i < amount; i++) {
+      let newCweNode = {
+        id: "cweID:" + (i + 1),
+        label: "",
+        size: 150,
+
+        style: {
+          fill: "#8EA7E9",
+        },
+        labelCfg: {
+          style: {
+            fill: "#fff",
+          },
+        },
+        describtion: "CWE编号:" + cweIds[i],
+      }
+
+      newCweNode.label = cweIds[i]
+
+      let newCweToCveLine = {
+        id: "cweLine" + (i + 1),
+        source: "cveID",
+        target: newCweNode.id, // 目标点 id
+      }
+
+      initData.nodes.push(newCweNode)
+      initData.edges.push(newCweToCveLine)
+    }
+  }
+
+  const createCvssNode = (score) => {
+    if (score == "") {
+      score = null
+    };
+    let newCvssNode = {
+      id: "cvssScore",
+      label: "",
+      size: 150,
+      labelCfg: {
+        style: {
+          fill: "#fff",
+        },
+      },
+      style: {
+        fill: "#cbb0e3",
+      },
+      describtion: "CVSS Version3.",
+    }
+    newCvssNode.label = "CVSS评分: " + score + "."
+
+    let newCvssToCveidLine = {
+      id: "CvssLine",
+      source: "cveID",
+      target: "cvssScore", // 目标点 id
+    }
+
+    initData.nodes.push(newCvssNode)
+    initData.edges.push(newCvssToCveidLine)
+  }
+
+  const createInfluenceNode = (influencedComponents) => {
+    let amount = influencedComponents.length
+
+    for (let i = 0; i < amount; i++) {
+      let newCpeNode = {
+        id: "cpe" + (i + 1),
+        label: "cpe" + (i + 1),
+        size: 150,
+
+        style: {
+          fill: "#8EA7E9",
+        },
+        labelCfg: {
+          style: {
+            fill: "#fff",
+          },
+        },
+        describtion: influencedComponents[i],
+      }
+
+      let newCpeToCveLine = {
+        id: "cpeLine" + (i + 1),
+        source: "cveID",
+        target: newCpeNode.id, // 目标点 id
+      }
+
+      initData.nodes.push(newCpeNode)
+      initData.edges.push(newCpeToCveLine)
+    }
+  }
+
   const [modalFlag, setModalFlag] = useState(false)
   const modalStyle = {
     width: '1200px',
     height: '800px',
   }
 
+  const [modalTitle, setModalTitle] = useState("Modal")
 
   const showModal = (record) => {
     console.log(record)
+    //打开窗口
     setModalFlag(true)
+    setModalTitle(record.cveId)
+    //获取cve数据信息
+    let data = {}
+    data.cve_id = record.cveId
+    getCveInfor(data)
+      .then((res) => {
+        console.log('res', res)
+        if (res.data.success) {
+          message.success('Success')
+          let data = res.data.data
+          createCveNode(data[0].cveid, data[1].cvedescription)
+          createCWENode(data[2].cweid)
+          createCvssNode(data[4].cvss3BaseScore)
+          createInfluenceNode(data[3].influencedCpe)
+        }
+      }).catch((err) => {
+
+      })
+    //绘制map
+    console.log('initData:', initData)
+    setMapData({ ...initData })
+    console.log('mapData:', mapData)
+
   }
 
   const hideModal = () => {
@@ -219,6 +367,10 @@ function CVETable () {
   useEffect(() => {
     getCVETableData()
   }, [])
+
+  useEffect(() => {
+    console.log('mapData:', mapData)
+  }, [mapData])
 
   return (
     <div>
@@ -235,7 +387,7 @@ function CVETable () {
 
       <Modal width={1200}
         bodyStyle={modalStyle}
-        title="Modal"
+        title={modalTitle}
         visible={modalFlag}
         onOk={hideModal}
         onCancel={hideModal}
