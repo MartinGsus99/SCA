@@ -1,72 +1,92 @@
 import request from '@/utils/request'
 
-export function getCVELoophole(data){
+export function getCVELoophole (data) {
     return request({
-        url:'/loophole/page/cve',
-        method:'get',
-        params:{
+        url: '/loophole/page/cve',
+        method: 'get',
+        params: {
             ...data
         },
     })
 }
 
-export function getCWELoophole(data){
+export function getCWELoophole (data) {
     return request({
-        url:'/loophole/page/cwe',
-        method:'get',
-        params:{
+        url: '/loophole/page/cwe',
+        method: 'get',
+        params: {
             ...data
         },
     })
 }
 
-export function getCPELoophole(data){
+export function getCPELoophole (data) {
     return request({
-        url:'/loophole/page/cpe',
-        method:'get',
-        params:{
-            ...data
-        },
-    })
-}
-
-
-export function getLicTypeList(data){
-    return request({
-        url:'/loophole/page/lic_type',
-        method:'get',
-        params:{
+        url: '/loophole/page/cpe',
+        method: 'get',
+        params: {
             ...data
         },
     })
 }
 
 
-export function getLicList(data){
+export function getLicTypeList (data) {
     return request({
-        url:'/loophole/page/lic',
-        method:'get',
-        params:{
+        url: '/loophole/page/lic_type',
+        method: 'get',
+        params: {
             ...data
         },
     })
 }
 
-export function getCveId(data){
+
+export function getLicList (data) {
     return request({
-        url:'/loophole/all_cve',
-        method:'get',
-        params:{
+        url: '/loophole/page/lic',
+        method: 'get',
+        params: {
+            ...data
+        },
+    })
+}
+
+export function getCveId (data) {
+    return request({
+        url: '/loophole/all_cve',
+        method: 'get',
+        params: {
             ...data
         }
     })
 }
 
-export function getCveInfor(data){
+export function getCveInfor (data) {
     return request({
-        url:'/loophole/cve_message',
-        method:'get',
-        params:{
+        url: '/loophole/cve_message',
+        method: 'get',
+        params: {
+            ...data
+        }
+    })
+}
+
+export function getDatabarInfor (data) {
+    return request({
+        url: '/loophole/get_increment',
+        method: 'get',
+        params: {
+            ...data
+        }
+    })
+}
+
+export function get30DaysUpdateInfor (data) {
+    return request({
+        url: '/loophole/get_30_increment',
+        method: 'get',
+        params: {
             ...data
         }
     })

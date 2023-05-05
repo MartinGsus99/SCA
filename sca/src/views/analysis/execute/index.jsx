@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import DynamicTable from '@/components/DynamicTable';
-import DynamicForm from "@/components/DynamicForm";
-import { Card, Button, Modal } from 'antd';
-import { getTask } from "../../../api/task";
+import React, { useState } from "react"
+import DynamicTable from '@/components/DynamicTable'
+import DynamicForm from "@/components/DynamicForm"
+import { Card, Button, Modal } from 'antd'
+import { getTask } from "../../../api/task"
 
 
 class ContentAnalysis extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       visible: false,
       queryKeys: [
@@ -144,20 +144,21 @@ class ContentAnalysis extends React.Component {
       taskform: {
         taskname: '',
         language: '',
-      }
+      },
+      isLoading: false,
     }
   }
 
-  fetchData() {
-    let data = this.state.queryReportKeys;
-    data.page = this.state.listQuery.current;
-    data.rows = this.state.listQuery.pageSize;
+  fetchData () {
+    let data = this.state.queryReportKeys
+    data.page = this.state.listQuery.current
+    data.rows = this.state.listQuery.pageSize
     getTask(data).then((res) => {
-      const result = res.data.data;
+      const result = res.data.data
       const pageData = {
         total: res.data.total,
         pageSize: res.data.page,
-    }
+      }
       this.setState({
         data: result,
         listQuery: pageData
@@ -165,38 +166,38 @@ class ContentAnalysis extends React.Component {
     })
   }
 
-  componentWillMount() {
-    this.fetchData();
+  componentWillMount () {
+    this.fetchData()
   }
 
 
-  render() {
+  render () {
     var showModal = () => {
       this.setState({
         visible: true,
-      });
-    };
+      })
+    }
 
     var handleOk = e => {
-      console.log(this.state.taskform);
+      console.log(this.state.taskform)
 
       this.setState({
         visible: false,
-      });
-    };
+      })
+    }
 
     var handleCancel = e => {
       this.setState({
         visible: false,
-      });
-    };
+      })
+    }
     return (
       <div>
         <Card>
           <Button onClick={showModal}>新增任务</Button>
         </Card>
         <Card>
-          <DynamicTable uiList={this.state.uiList} data={this.state.data} pageData={this.state.listQuery}></DynamicTable>
+          <DynamicTable uiList={this.state.uiList} data={this.state.data} pageData={this.state.listQuery} isLoading={this.state.isLoading}></DynamicTable>
         </Card>
         <Modal title="Test Modal" visible={this.state.visible}
           onOk={handleOk
@@ -206,8 +207,8 @@ class ContentAnalysis extends React.Component {
 
 
       </div>
-    );
+    )
   }
 }
 
-export default ContentAnalysis;
+export default ContentAnalysis

@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import { Col, Row } from 'antd';
-import CPUGauge from './components/gaugeChart1';
-import RAMGauge from './components/gaugeChart2';
-import NETGauge from './components/gaugeChart3';
-import DynamicTable from '../../components/DynamicTable';
+import React, { Component } from 'react'
+import { Col, Row } from 'antd'
+import CPUGauge from './components/gaugeChart1'
+import RAMGauge from './components/gaugeChart2'
+import NETGauge from './components/gaugeChart3'
+import DynamicTable from '../../components/DynamicTable'
 
-import { getAdminIndexChart } from '../../api/chart';
+import { getAdminIndexChart } from '../../api/chart'
 
 import {
     getTask
-} from "../../api/task";
+} from "../../api/task"
 
 class SysBoard extends Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
     state = {
         CPUGauge: 0,
@@ -47,34 +47,34 @@ class SysBoard extends Component {
             current: 10,
             pageSize: 10, // 每页显示的条数
             total: 0, // 数据总数
-          },
+        },
 
     }
 
-    getSysStatusData() {
+    getSysStatusData () {
         getAdminIndexChart().then((res) => {
             if (res.data.success) {
-                let data = res.data.data;
-                let cpu = data.cpuPercent.used_percent;
-                let ram = data.memoryPercent.used_percent;
-                let net = data.networkFlow.received_network_flow;
+                let data = res.data.data
+                let cpu = data.cpuPercent.used_percent
+                let ram = data.memoryPercent.used_percent
+                let net = data.networkFlow.received_network_flow
                 this.setState({
                     CPUGauge: cpu,
                     ramUsage: ram,
                     networkFlow: net,
-                });
+                })
             }
         })
     }
 
-    fetchData() {
+    fetchData () {
         //获取数据
-        this.isLoading = true;
+        this.isLoading = true
         let data = this.state.queryKeys
         data.page = 1
         data.rows = 10
         getTask(data).then((res) => {
-            console.log(res);
+            console.log(res)
             if (res.data.success) {
                 console.log(res.data.data)
                 this.setState({
@@ -82,25 +82,25 @@ class SysBoard extends Component {
                     listData: res.data.data,
                 })
             }
-        });
+        })
     }
 
-    componentWillMount() {
-        this.getSysStatusData();
-        this.fetchData();
+    componentWillMount () {
+        this.getSysStatusData()
+        this.fetchData()
     }
 
-    componentDidMount() {
-        // this.timer = setInterval(() => this.getSysStatusData(), 2000);
+    componentDidMount () {
+        this.timer = setInterval(() => this.getSysStatusData(), 1000)
     }
 
-    componentWillUnmount() {
-        this.time && clearTimeout(this.timer);
+    componentWillUnmount () {
+        this.time && clearTimeout(this.timer)
     }
 
 
 
-    render() {
+    render () {
         return (<div>
             <Row>
                 <Col className='gaugeCard' span={8}>
@@ -115,10 +115,10 @@ class SysBoard extends Component {
             </Row>
 
             <Row>
-                <DynamicTable uiList={this.state.uiList} data={this.state.listData} pageData={this.state.listQuery} ></DynamicTable>
+                <DynamicTable uiList={this.state.uiList} data={this.state.listData} isLoading={this.state.isLoading}></DynamicTable>
             </Row>
-        </div>);
+        </div>)
     }
 }
 
-export default SysBoard;
+export default SysBoard
