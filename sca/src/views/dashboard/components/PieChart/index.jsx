@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import * as echarts from 'echarts';
+import React, { Component } from 'react'
+import * as echarts from 'echarts'
 class PieChart extends Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   state = {
     chart: null,
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (nextProps.chartData !== this.props.pieChartData) {
-      this.initChart();
+      this.initChart()
     }
   }
 
-  setOptions(actualData) {
+  setOptions (actualData) {
     this.state.chart.setOption({
       title: {
         text: this.props.chartTitle,
@@ -46,30 +46,30 @@ class PieChart extends Component {
     })
   }
 
-  initChart() {
-    if (!this.el) return;
+  initChart () {
+    if (!this.el) return
     this.setState({ chart: echarts.init(this.el, "macarons") }, () => {
-      this.setOptions(this.props.pieChartData);
-    });
+      this.setOptions(this.props.pieChartData)
+    })
   }
 
-  dispose() {
+  dispose () {
     if (!this.state.chart) {
-      return;
+      return
     }
- 
-    this.setState({ chart: null });
+
+    this.setState({ chart: null })
   }
 
-  componentWillUnmount() {
-    this.dispose();
+  componentWillUnmount () {
+    this.dispose()
   }
 
-  render() {
+  render () {
     return (
-      <div ref={(el) => (this.el = el)} style={this.props.styles }></div>
-    );
+      <div ref={(el) => (this.el = el)} style={this.props.styles}></div>
+    )
   }
 }
 
-export default PieChart;
+export default PieChart

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Space, Table, Tag, Pagination, Button, Spin } from 'antd'
 import { useState } from 'react'
+import './index.less'
 
 function DynamicTable (props) {
     const onShowSizeChange = (current, pageSize) => {
